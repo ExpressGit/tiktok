@@ -25,7 +25,8 @@ import sys
 import hashlib
 import base64
 import time
-
+import hashlib
+import moviepy
 import apiproxy
 
 
@@ -195,7 +196,33 @@ class Utils(object):
             result[i] = ord(b[i]) ^ d[(d[t] + d[c]) % 256]
 
         return result
-
-
+    
+    def get_file_md5(self,file_path):
+        """
+        分段读取，获取文件的md5值
+        :param file_path:
+        :return:
+        """
+        with open(file_path, 'rb') as file:
+            md5_obj = hashlib.md5()
+            while True:
+                buffer = file.read(8096)
+                if not buffer:
+                    break
+                md5_obj.update(buffer)
+            hash_code = md5_obj.hexdigest()
+        md5 = str(hash_code).lower()
+        return md5
+    
+    def modify_file_md5(self,file_path):
+        """
+        修改文件的md5值
+        :param file_path:
+        :return:
+        """
+        with open(file_path, 'a') as file:
+            file.write("####&&&&")
+    
+    
 if __name__ == "__main__":
     pass

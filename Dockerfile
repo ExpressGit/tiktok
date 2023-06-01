@@ -13,4 +13,4 @@ RUN pip3 install -r requirements_docker.txt
 
 ENV TZ=Asia/Shanghai
 
-CMD ["python3", "WebApi.py"]
+# CMD ["echo", "hello world"]
