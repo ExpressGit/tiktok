@@ -30,11 +30,6 @@
 * 基于Flask实现 Web 交互界面
 * 提供相关接口，支持单个作品、直播、主页喜欢、主页作品、主页合集、合集、音乐(原声)通过接口获取
 
-![WebApi](img/WebApi.jpg)
-![WebApi video](img/WebApivideo.jpg)
-![WebApi preview video](img/WebApipreviewvideo.jpg)
-![WebApi image](img/WebApiimage.jpg)
-![WebApi preview image](img/WebApipreviewimage.jpg)
 
 ## 抖音批量下载工具 Feature
 
@@ -75,8 +70,6 @@
 ### 使用方式
 
 使用抖音去水印工具有4种方式
-
-1. (推荐)直接使用我搭建的抖音去水印工具：https://dy.gyh.im/
 
 2. 使用docker运行
 
