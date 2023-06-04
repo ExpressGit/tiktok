@@ -32,6 +32,7 @@ from apiproxy.common import utils
 configModel = {
     "link": [],
     "path": os.getcwd(),
+    "config":'config',
     "music": True,
     "cover": True,
     "avatar": True,
@@ -66,6 +67,8 @@ def argument():
     parser.add_argument("--link", "-l",
                         help="作品(视频或图集)、直播、合集、音乐集合、个人主页的分享链接或者电脑浏览器网址, 可以设置多个链接(删除文案, 保证只有URL, https://v.douyin.com/kcvMpuN/ 或者 https://www.douyin.com/开头的)",
                         type=str, required=False, default=[], action="append")
+    parser.add_argument("--config", "-cn", help="Yaml配置文件名称",
+                        type=str, required=False, default=os.getcwd())
     parser.add_argument("--path", "-p", help="下载保存位置, 默认当前文件位置",
                         type=str, required=False, default=os.getcwd())
     parser.add_argument("--music", "-m", help="是否下载视频中的音乐(True/False), 默认为True",
@@ -114,9 +117,10 @@ def argument():
     return args
 
 
-def yamlConfig():
+def yamlConfig(config_name):
     curPath = os.path.dirname(os.path.realpath(sys.argv[0]))
-    yamlPath = os.path.join(curPath, "config.yml")
+    yamlPath = os.path.join(curPath, config_name+".yml")
+    print(yamlPath)
     f = open(yamlPath, 'r', encoding='utf-8')
     cfg = f.read()
     configDict = yaml.load(stream=cfg, Loader=yaml.FullLoader)
@@ -268,7 +272,7 @@ def main():
         configModel["thread"] = args.thread
         configModel["cookie"] = args.cookie
     else:
-        yamlConfig()
+        yamlConfig(args.config)
 
     if configModel["link"] == []:
         return
