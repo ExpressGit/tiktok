@@ -20,7 +20,7 @@ link:
 
 # 下载保存位置, 默认当前文件位置
 # 必选
-path: D:\tiktok_download
+path: /root/video_download
 
 # 是否下载视频中的音乐(True/False), 默认为True
 # 可选
@@ -89,18 +89,18 @@ increase:
 
 # 设置线程数, 默认5个线程
 # 可选
-thread: 5
+thread: 2
 
 # cookie 请登录网页抖音后F12查看
 # cookies 和 cookie 二选一, 要使用这种形式, 请注释下面的cookie
 # 目前只需要msToken、ttwid、odin_tt、passport_csrf_token、sid_guard
 # 可以动态添加, 程序会根据填的键查找，并没有写死, 如果抖音需要更多的cookie自己加上就行了
 cookies:
-  msToken: vcTCn1tY2DlnPxDZ_fZHXkf6i8Rm8Zrp9nICodZoOEQ_fCd_XUg2qNeKvhPJ1_pheoJI0xJh-DhgsiYee82eQ92dZsE_n-V85yWsdwsiu1iJRbFnLUhC
-  ttwid: 1%7CtvwAzla_tHRMrUqJw_Z3KuQXyM-shAGcinPBpow2mHY%7C1675754228%7C09186d2387d53c1ed6066b655eb4de15f4944c89de4e1e680e25ba9ab31cdc4a
-  odin_tt: a8d443cdd6e722938f40d9c72217b943c0105ff524985cb408949546b2f6391a3b05c38621075bec9172cda36080eb08efbadfa52c8c1397f53dcd86ffde8b17
-  passport_csrf_token: 0f1c6ce75eea4adf5f84a11a838a5c59
-  sid_guard: f4e5be2a78a337f01bb08603eb5f1563%7C1685579627%7C5183997%7CMon%2C+31-Jul-2023+00%3A33%3A44+GMT
+  msToken: 4G-FEISr8z7bs_JPi6Yux9gr2FQNdSmfTBq45-QnuReyJXyobihwt1bvqy3dpAR4gTAqbJdZ_KCrqauoa-EYTxTGcM8Gm9pXvfRikmwSMi-Uxx_LIjFT
+  ttwid: 1%7Cq2xtKdfnU4NuRwLzGD-c4AfwQxdwdHSAM50kk2kq5u0%7C1678512960%7C10362b87a33ff51bb5d00e49371b74606c651508a220c0d07c35fd11745778f5
+  odin_tt: 44dc303732befa720ecd84166f99ec3bf29fc22c2ad5c9cc5fbfdb23ff439d6fd591b26b7d27a64664e391d02c852caa
+  passport_csrf_token: abc15640a4e77dd318806d8721fa6bad
+  sid_guard: fe1fc6f8a1ffdbf90d24ffd87c6d33d5%7C1685884469%7C5183998%7CThu%2C+03-Aug-2023+13%3A14%3A27+GMT
 
 # cookie 请登录网页抖音后F12查看
 # cookies 和 cookie 二选一, 要使用这种形式, 请注释上面的cookies及包含的所有键值对
