@@ -532,3 +532,28 @@ python DouYinCommand.py -C True -l https://v.douyin.com/SnXMoh2/ -p /path/to/dow
 # Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=imgyh/tiktok&type=Date)](https://star-history.com/#imgyh/tiktok&Date)
+
+# 升级python版本
+```
+yum -y install gcc python36-devel bzip2-devel sqlite-devel openssl-devel readline-devel xz-devel xz-devel tk-devel gdbm-devel libffi-devel
+cd /usr/local/src
+wget https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz
+tar zxvf Python-3.9.7.tgz
+cd Python-3.9.7/
+./configure --prefix=/usr/local/python3.9 --with-ssl
+make && make install
+
+ln -fs /usr/local/python3.9/bin/python3.9 /usr/bin/python
+ln -fs /usr/local/python3.9/bin/python3.9 /usr/bin/python3
+ln -fs /usr/local/python3.9/bin/pip3.9 /usr/bin/pip
+ln -fs /usr/local/python3.9/bin/pip3.9 /usr/bin/pip3
+
+python -m pip install --upgrade pip
+
+```
+
+# 启动命令
+```
+python3 DouYinCommand.py -C False --config beauty
+
+```

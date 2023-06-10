@@ -119,7 +119,7 @@ def argument():
 
 def yamlConfig(config_name):
     curPath = os.path.dirname(os.path.realpath(sys.argv[0]))
-    yamlPath = os.path.join(curPath, config_name+".yml")
+    yamlPath = os.path.join(curPath, config_name+"_.yml")
     print(yamlPath)
     f = open(yamlPath, 'r', encoding='utf-8')
     cfg = f.read()
