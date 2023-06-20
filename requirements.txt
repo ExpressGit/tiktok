@@ -11,6 +11,9 @@ audosub
 #googletrans
 pygoogletranslation
 googletrans==4.0.0-rc1
-pytesseract
+
 Pillow
 git+https://github.com/m-bain/whisperx.git
+
+uninstall opencv-python
+opencv-python-headless
