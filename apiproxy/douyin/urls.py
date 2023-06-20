@@ -28,7 +28,7 @@ class Urls(object):
         self.USER_SHORT_INFO = 'https://www.douyin.com/aweme/v1/web/im/user/info/?'
 
         # 用户详细信息
-        self.USER_DETAIL = 'https://www.douyin.com/aweme/v1/web/user/profile/other/?'
+        self.USER_DETAIL = 'https://www.iesdouyin.com/web/api/v2/user/info/?'
 
         # 用户作品
         self.USER_POST = 'https://www.douyin.com/aweme/v1/web/aweme/post/?'

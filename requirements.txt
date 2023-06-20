@@ -3,4 +3,14 @@ flask==2.2.2
 pyinstaller==5.7.0
 tqdm==4.65.0
 PyYAML==6.0
+scipy
 moviepy
+whisper
+translate
+audosub
+#googletrans
+pygoogletranslation
+googletrans==4.0.0-rc1
+pytesseract
+Pillow
+git+https://github.com/m-bain/whisperx.git

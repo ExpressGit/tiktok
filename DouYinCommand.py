@@ -297,12 +297,13 @@ def main():
         key_type, key = dy.getKey(url)
         if key_type == "user":
             print("[  提示  ]:正在请求用户主页下作品\r\n")
+            # 解决爬取用户信息的解决方案 ：http://www.lxspider.com/?p=299
             data = dy.getUserDetailInfo(sec_uid=key)
             nickname = ""
             if data is not None and data != {}:
-                nickname = utils.replaceStr(data['user']['nickname'])
+                nickname = utils.replaceStr(data['user_info']['nickname'])
 
-            userPath = os.path.join(configModel["path"], "user_" + nickname + "_" + key)
+            userPath = os.path.join(configModel["path"], "user_" + nickname)
             if not os.path.exists(userPath):
                 os.mkdir(userPath)
 

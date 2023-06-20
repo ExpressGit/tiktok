@@ -64,16 +64,19 @@ class Download(object):
             return
         if not os.path.exists(savePath):
             os.mkdir(savePath)
-
+        video_time = awemeDict["create_time"][:10]
+        video_time_dir = os.path.join(savePath,video_time)
         try:
             # 使用作品 创建时间+描述 当文件夹
             file_name = awemeDict["create_time"] + "_" + utils.replaceStr(awemeDict["desc"])
             if self.folderstyle:
-                aweme_path = os.path.join(savePath, file_name)
+                if not os.path.exists(video_time_dir):
+                    os.mkdir(video_time_dir)
+                aweme_path = os.path.join(video_time_dir, file_name)
                 if not os.path.exists(aweme_path):
                     os.mkdir(aweme_path)
             else:
-                aweme_path = savePath
+                aweme_path = video_time_dir
 
             # 保存获取到的字典信息
             if self.resjson:
@@ -173,7 +176,7 @@ class Download(object):
             return
         if not os.path.exists(savePath):
             os.mkdir(savePath)
-
+            
         self.alltask = []
         self.pool = ThreadPoolExecutor(max_workers=self.thread)
 

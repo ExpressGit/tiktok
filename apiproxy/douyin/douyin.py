@@ -670,7 +670,7 @@ class Douyin(object):
             # 接口不稳定, 有时服务器不返回数据, 需要重新获取
             try:
                 url = self.urls.USER_DETAIL + utils.getXbogus(
-                        f'sec_user_id={sec_uid}&device_platform=webapp&aid=6383')
+                        f'sec_uid={sec_uid}')
 
                 res = requests.get(url=url, headers=douyin_headers)
                 datadict = json.loads(res.text)

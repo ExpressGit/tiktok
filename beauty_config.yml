@@ -12,19 +12,16 @@
 # 可以设置多个链接, 确保至少一个链接
 # 必选
 link:
-  - https://live.douyin.com/759547612580
-  - https://v.douyin.com/BugmVVD/
-  - https://v.douyin.com/BugrFTN/
-  - https://v.douyin.com/B38oovu/
-  - https://v.douyin.com/S6YMNXs/
+  - https://v.douyin.com/U7rFMX7/
+  - https://v.douyin.com/i3RHh5/
 
 # 下载保存位置, 默认当前文件位置
 # 必选
-path: /root/video_download
+path: /root/video_download/douyin
 
 # 是否下载视频中的音乐(True/False), 默认为True
 # 可选
-music: True
+music: False
 
 # 是否下载视频的封面(True/False), 默认为True, 当下载视频时有效
 # 可选
@@ -57,17 +54,17 @@ folderstyle: True # True -> 每个视频是一个单独的文件夹; False -> �
 # 可选
 mode:
   - post
-  - like
-  - mix
+  #- like
+  #- mix
 
 # 下载作品个数设置
 # 可选
 number:
-  post: 5     # 主页下作品下载个数设置, 默认为0 全部下载
-  like: 5     # 主页下喜欢下载个数设置, 默认为0 全部下载
+  post: 0     # 主页下作品下载个数设置, 默认为0 全部下载
+  like: 1     # 主页下喜欢下载个数设置, 默认为0 全部下载
   allmix: 1   # 主页下合集下载个数设置, 默认为0 全部下载
-  mix: 5      # 单个合集下作品下载个数设置, 默认为0 全部下载
-  music: 5    # 音乐(原声)下作品下载个数设置, 默认为0 全部下载
+  mix: 1      # 单个合集下作品下载个数设置, 默认为0 全部下载
+  music: 1    # 音乐(原声)下作品下载个数设置, 默认为0 全部下载
 
 database: True # 如果不使用数据库, 增量更新将不可用
 
@@ -96,12 +93,12 @@ thread: 2
 # 目前只需要msToken、ttwid、odin_tt、passport_csrf_token、sid_guard
 # 可以动态添加, 程序会根据填的键查找，并没有写死, 如果抖音需要更多的cookie自己加上就行了
 cookies:
-  msToken: 4G-FEISr8z7bs_JPi6Yux9gr2FQNdSmfTBq45-QnuReyJXyobihwt1bvqy3dpAR4gTAqbJdZ_KCrqauoa-EYTxTGcM8Gm9pXvfRikmwSMi-Uxx_LIjFT
-  ttwid: 1%7Cq2xtKdfnU4NuRwLzGD-c4AfwQxdwdHSAM50kk2kq5u0%7C1678512960%7C10362b87a33ff51bb5d00e49371b74606c651508a220c0d07c35fd11745778f5
-  odin_tt: 44dc303732befa720ecd84166f99ec3bf29fc22c2ad5c9cc5fbfdb23ff439d6fd591b26b7d27a64664e391d02c852caa
-  passport_csrf_token: abc15640a4e77dd318806d8721fa6bad
-  sid_guard: fe1fc6f8a1ffdbf90d24ffd87c6d33d5%7C1685884469%7C5183998%7CThu%2C+03-Aug-2023+13%3A14%3A27+GMT
-
+  msToken: q79ZKPxpNZuEGCFZM2tMzVUkEMnzeRGtBclmClTgpAxdW3xJUiaiUGL4EWrr2gXjIhBSpNR7VyLFj49XARLUgnjRRXTlmqJXGmu2NZjT5OiTi3ziabOEZQ==
+  ttwid: 1%7CtvwAzla_tHRMrUqJw_Z3KuQXyM-shAGcinPBpow2mHY%7C1675754228%7C09186d2387d53c1ed6066b655eb4de15f4944c89de4e1e680e25ba9ab31cdc4a
+  odin_tt: a8d443cdd6e722938f40d9c72217b943c0105ff524985cb408949546b2f6391a3b05c38621075bec9172cda36080eb08efbadfa52c8c1397f53dcd86ffde8b17
+  passport_csrf_token: ee950cc56d9b3cc651c4eb724546f6fc
+  sid_guard: f4e5be2a78a337f01bb08603eb5f1563%7C1685579627%7C5183997%7CMon%2C+31-Jul-2023+00%3A33%3A44+GMT
+  
 # cookie 请登录网页抖音后F12查看
 # cookies 和 cookie 二选一, 要使用这种形式, 请注释上面的cookies及包含的所有键值对
 # 设置了这个后上面的cookies选项自动失效, 这个优先级更高
