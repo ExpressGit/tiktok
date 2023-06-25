@@ -32,7 +32,7 @@ class WatermarkRemover(object):
     COFF = 0.7
     w, h = int(COFF * img.shape[1]), int(COFF * img.shape[0])
     resize_img = cv2.resize(img, (w, h))
-    roi = [w/8,h-(h/3),w-(w/8),h-10]
+    roi = [w-(w/3),0,w,h/5]
     print(roi)
     # roi = cv2.selectROI(hint, resize_img, False, False)
     # cv2.destroyAllWindows()
@@ -130,45 +130,45 @@ class WatermarkRemover(object):
         clip = opencv_video.set_audio(audio)
         clip.to_videofile(output_path)
 
-#   def remove_video_watermark(self,VIDEO_PATH,OUTPUT_PATH):
-#     '''
-#     去除视频水印
-#     '''
-#     if not os.path.exists(OUTPUT_PATH):
-#       os.makedirs(OUTPUT_PATH)
+  def remove_video_watermark(self,VIDEO_PATH,OUTPUT_PATH):
+    '''
+    去除视频水印
+    '''
+    if not os.path.exists(OUTPUT_PATH):
+      os.makedirs(OUTPUT_PATH)
 
-#     filenames = [os.path.join(VIDEO_PATH, i) for i in os.listdir(VIDEO_PATH) if i.endswith('.mp4')]
-#     mask = None
+    filenames = [os.path.join(VIDEO_PATH, i) for i in os.listdir(VIDEO_PATH) if i.endswith('.mp4')]
+    mask = None
 
-#     for i, name in enumerate(filenames):
-#       if i == 0:
-#         #生成水印蒙版
-#         mask = self.generate_watermark_mask(name)
+    for i, name in enumerate(filenames):
+      if i == 0:
+        #生成水印蒙版
+        mask = self.generate_watermark_mask(name)
 
-#       #创建待写入文件对象
-#       video = cv2.VideoCapture(name)
-#       fps = video.get(cv2.CAP_PROP_FPS)
-#       size = (int(video.get(cv2.CAP_PROP_FRAME_WIDTH)), int(video.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-#       video_writer = cv2.VideoWriter(TEMP_VIDEO, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+      #创建待写入文件对象
+      video = cv2.VideoCapture(name)
+      fps = video.get(cv2.CAP_PROP_FPS)
+      size = (int(video.get(cv2.CAP_PROP_FRAME_WIDTH)), int(video.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+      video_writer = cv2.VideoWriter(TEMP_VIDEO, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
     
-#       #逐帧处理图像
-#       success, frame = video.read()
+      #逐帧处理图像
+      success, frame = video.read()
 
-#       while success:
-#         frame = self.inpaint_image(frame, mask)
-#         video_writer.write(frame)
-#         success, frame = video.read()
+      while success:
+        frame = self.inpaint_image(frame, mask)
+        video_writer.write(frame)
+        success, frame = video.read()
 
-#       video.release()
-#       video_writer.release()
+      video.release()
+      video_writer.release()
 
-#       #封装视频
-#       (_, filename) = os.path.split(name)
-#       output_path = os.path.join(OUTPUT_PATH, filename.split('.')[0] + '_no_watermark.mp4')#输出文件路径
-#       self.merge_audio(name, output_path, TEMP_VIDEO)
+      #封装视频
+      (_, filename) = os.path.split(name)
+      output_path = os.path.join(OUTPUT_PATH, filename.split('.')[0] + '_no_watermark.mp4')#输出文件路径
+      self.merge_audio(name, output_path, TEMP_VIDEO)
   
-#   if os.path.exists(TEMP_VIDEO):
-#     os.remove(TEMP_VIDEO)
+  if os.path.exists(TEMP_VIDEO):
+    os.remove(TEMP_VIDEO)
 
   def remove_video_subtitle(self,VIDEO_PATH,OUTPUT_PATH):
     '''
@@ -217,9 +217,15 @@ def clear_caption(video_path,output_path):
     remover = WatermarkRemover(threshold=60, kernel_size=5)
     remover.remove_video_subtitle(video_path,output_path)
     
+
+def clear_logo_caption(video_path,output_path):
+    #去除logo 水印
+    remover = WatermarkRemover(threshold=80, kernel_size=5)
+    remover.remove_video_watermark(video_path,output_path)
     
+ 
 if __name__ == '__main__':
-    video_path = '/root/video_download/douyin/user_00后的窝/post/2023-01-07/2023-01-07 17.21.40_感谢喜欢你们要的一镜到底来啦你们是喜欢我/'
-    output_path = '/root/video_download/douyin/user_00后的窝/post/2023-01-07/2023-01-07 17.21.40_感谢喜欢你们要的一镜到底来啦你们是喜欢我/remove'
-    clear_caption(video_path,output_path)
+    video_path = '/root/video_download/bili/浅影阿_/2023-05-27/'
+    output_path = '/root/video_download/bili/浅影阿_/2023-05-27/remove'
+    clear_logo_caption(video_path,output_path)
     

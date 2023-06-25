@@ -12,7 +12,7 @@
 @time: 2019-12-25 14:23 
 @description：图片工具类
 """
-import cv2
+import cv2,os
 from moviepy.video.VideoClip import ImageClip
 from moviepy.editor import VideoFileClip
 
@@ -57,3 +57,10 @@ class ImageUtil(object):
         video.release()
 
         return VideoFileClip(output_video_path)
+
+
+if __name__ == '__main__':
+    imgutil = ImageUtil()
+    img_dir = '/root/video_download/bili/浅影阿_/2023-05-27'
+    imgutil.one_pic_to_video(os.path.join(img_dir,'Temp'),os.path.join(img_dir,'out.mp4'),24,144)
+    

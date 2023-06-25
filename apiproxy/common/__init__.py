@@ -17,5 +17,10 @@
 ------------------------------------------------
 '''
 from .utils import Utils
+from .TranslateUtil import *
+from .FFmpegUtil import *
+from .ImageUtil import *
+from .SubtitleUtil import *
+from .VideoUtil import *
 
 utils = Utils()

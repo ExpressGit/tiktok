@@ -13,15 +13,12 @@ import random
 import shutil
 
 
-class FFmpeg:
+class FFmpeg(object):
 
-    def __init__(self, editvdo, addlogo=None, addmusic=None,
-                 addvdohead=None, addvdotail=None):
+    def __init__(self, editvdo, addlogo=None, addmusic=None):
         self.editvdo = editvdo
         self.addlogo = addlogo
         self.addmusic = addmusic
-        self.addvdohead = addvdohead
-        self.addvdotail = addvdotail
         self.vdo_time, self.vdo_width, self.vdo_height, self.attr_dict = self.get_attr()
         self.editvdo_path = os.path.dirname(editvdo)
         self.editvdo_name = os.path.basename(editvdo)
@@ -63,6 +60,60 @@ class FFmpeg:
             return True
         else:
             return False
+        
+    def remove_45_bili_logo(self,video_width,video_height,deposit=None):
+        """
+        去除bili水印(4:5视频)
+        :param roi:水印坐标 左上方，右上方，右下方logo
+        :return: True/False
+        """
+        if os.path.exists(deposit):
+            os.remove(deposit)
+        # ffmpeg -i 'a.mp4' -b:v 3441k -vf "delogo=x=1593:y=30:w=320:h=80:show=0" -c:a copy "no_logo.mp4"
+        x_right = video_width*0.65
+        h_bottom = video_height*0.9
+        
+        strcmd = 'ffmpeg  -i "{}" -b:v 3440k -vf "delogo=x="{}":y=60:w=700:h=200:show=0,delogo=x=50:y=60:w=700:h=200:show=0,delogo=x="{}":y="{}":w=700:h=200:show=0" -c:a copy "{}" '.format(
+            self.editvdo,x_right,x_right,h_bottom,deposit)
+        result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
+
+    def remove_169_bili_logo(self,video_width,video_height,deposit=None):
+        """
+        去除bili水印 16:9
+        :param roi:水印坐标 左上方，右上方，右下方logo
+        :return: True/False
+        """
+        if os.path.exists(deposit):
+            os.remove(deposit)
+        # ffmpeg -i 'a.mp4' -b:v 3441k -vf "delogo=x=1593:y=30:w=320:h=80:show=0" -c:a copy "no_logo.mp4"
+        strcmd = 'ffmpeg  -i "{}" -b:v 3440k -vf "delogo=x=1593:y=30:w=320:h=80:show=0,delogo=x=30:y=30:w=320:h=80:show=0,delogo=x=1593:y=1000:w=320:h=50:show=0" -c:a copy "{}" '.format(
+            self.editvdo, deposit)
+        result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
+    
+    def edit_metadata(self,deposit=None):
+        """
+        修改视频的metadata信息
+        :param deposit:修改后另存为路径，为空则覆盖
+        :return: True/False
+        ffmpeg -i a.mp4 -vcodec copy -acodec copy -metadata comment=sanyuanchuanmei -metadata description=sanyuanchuanmei  b.mp4 -y
+        """
+        strcmd = 'ffmpeg -i "{}" -vcodec copy -acodec copy -metadata comment=sanyuanchuanmei -metadata description=sanyuanchuanmei "{}" -y'.format(
+                    self.editvdo,deposit)
+        result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
+        return True
+    
+    def add_video_subtitle(self, srt_file ,deposit=None):
+        """
+        添加视频字幕
+        :param deposit:添加字幕后另存为路径，为空则覆盖
+        :return: True/False
+        """
+        FONT_URL = 'apiproxy/font/HYBiRanTianTianQuanW-2.ttf'
+        strcmd = 'ffmpeg -i "{}" -vf "subtitles={}" -c:a copy "{}" '.format(
+                    self.editvdo, srt_file, deposit)
+        print(strcmd)
+        result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
+        return True
 
     def edit_logo(self, deposit=None):
         """
@@ -83,6 +134,7 @@ class FFmpeg:
         else:
             return False
 
+    
     def edit_music(self, deposit=None):
         if None == deposit:
             deposit = self.editvdo_path+'/'+'edit_music'+self.editvdo_name
@@ -153,4 +205,7 @@ class FFmpeg:
             return False
 
 if __name__ == '__main__':
-    pass
+    video_path = '/root/video_download/bili/浅影阿_/2023-05-17/周董封神之作！《七里香》宿舍姐妹甜美翻唱！.mp4'
+    deposit = '/root/video_download/bili/浅影阿_/2023-05-17/周董封神之作！《七里香》宿舍姐妹甜美翻唱！_remove_logo.mp4'
+    ffmpegUtil = FFmpeg(video_path)
+    ffmpegUtil.remove_bili_logo(deposit)
