@@ -1,0 +1,88 @@
+# 作品(视频或图集)、直播、合集、音乐集合、个人主页的分享链接或者电脑浏览器网址
+# (删除文案, 保证只有URL, https://v.douyin.com/kcvMpuN/ 或者 https://www.douyin.com/开头的)
+# 可以设置多个链接, 确保至少一个链接
+# 必选
+link:
+  - https://space.bilibili.com/500525892
+  - https://space.bilibili.com/3494358099692362
+  - https://space.bilibili.com/314480501
+  - https://space.bilibili.com/1480975816
+  - https://space.bilibili.com/361469957
+  - https://space.bilibili.com/3493299230870075
+  - https://space.bilibili.com/186944422
+  - https://space.bilibili.com/59905809
+  - https://space.bilibili.com/521519413
+  - https://space.bilibili.com/1727521790
+  - https://space.bilibili.com/6783603
+  - https://space.bilibili.com/46988897
+  - https://space.bilibili.com/3493077694023680
+  - https://space.bilibili.com/327324198
+  - https://space.bilibili.com/388584153
+  - https://space.bilibili.com/97747346
+  - https://space.bilibili.com/1638251477
+  - https://space.bilibili.com/3493136932276271
+  - https://space.bilibili.com/294675228
+  - https://space.bilibili.com/606332269
+  - https://space.bilibili.com/227107602
+  - https://space.bilibili.com/596842980
+  - https://space.bilibili.com/71573495
+  - https://space.bilibili.com/279180568
+  - https://space.bilibili.com/7370030
+
+#指定视频logo位置 rightbottom，righttop，lefttop，leftbottom,empty
+logops:
+  - rightbottom
+  - righttop
+  - lefttop
+  - righttop
+  - righttop
+  - lefttop
+  - righttop
+  - righttop
+  - lefttop
+  - lefttop
+  - righttop
+  - righttop
+  - righttop
+  - righttop
+  - righttop
+  - righttop
+  - righttop
+  - empty
+  - righttop
+  - righttop
+  - righttop
+  - righttop
+  - righttop
+  - empty
+  - empty
+
+
+#指定每次下载后的休眠时间，避免B站风控
+sleep: 13
+# 下载保存位置, 默认当前文件位置
+# 必选
+path: /root/video_download/bili
+
+#最大并行 worker 数量
+num_works: 1
+
+#指定视频清晰度等级 可选值 127 | 126 | 125 | 120 | 116 | 112 | 80 | 74 | 64 | 32 | 16
+video_quality: 126
+
+#指定输出格式 可选值 "infer" | "mp4" | "mkv" | "mov"
+output_format: mp4
+
+#Cookies 设置 设置 Cookies 后你才可以下载更高清晰度以及更多的剧集，当你传入你的大会员 SESSDATA 时（当然前提是你是大会员），你就可以下载大会员可访问的资源咯
+# cookie
+cookie: 37583ff3%2C1700489464%2C32014%2A51
+
+cookie2: 1267441a%2C1698605684%2Cf9220%2A52
+
+cookie3: 373bebde%2C1703772306%2C65fbb%2A72qwqCIrIXpkwlZKbr7H01ujMC8O-BCXLV9kT2ZNiLkNwjVd2XHMn_B4proslgGsgXG0I5YgAAPQA
+
+#是否下载弹幕 默认false
+danmaku: False
+
+# 存放子路径模板
+subpath_template: \{username\}_\{owner_uid\}/\{pubdate\}/\{name\}

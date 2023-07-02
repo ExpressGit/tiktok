@@ -2,7 +2,7 @@
 Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
 Date: 2023-06-22 20:45:56
 LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
-LastEditTime: 2023-06-24 21:03:53
+LastEditTime: 2023-07-02 14:42:01
 FilePath: /tiktok/CommonVideoCrop.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -18,6 +18,7 @@ from apiproxy.common.SubtitleUtil import *
 from apiproxy.common import TranslateUtil
 import shutil
 import re
+from PIL import Image
 
 """
 通用视频处理类
@@ -43,7 +44,7 @@ class CommonVideoCrop(object):
         writers.close() 
         print(" title en 已写入文件 done")
 
-    def remove_bili_logo(self,video_path):
+    def remove_bili_logo(self,video_path,logpos):
         '''
         去除bili视频水印
         '''
@@ -56,10 +57,10 @@ class CommonVideoCrop(object):
         ffmpegutil = FFmpegUtil.FFmpeg(video_path)
         if video_width>video_height:
             print("16:9 视频去掉logo")
-            ffmpegutil.remove_169_bili_logo(video_width,video_height,new_video_path)
+            ffmpegutil.remove_169_bili_logo(video_width,video_height,logpos,new_video_path)
         else:
-            print("4:5 视频 去掉 logo")
-            ffmpegutil.remove_45_bili_logo(video_width,video_height,new_video_path)
+            print("4:5 视频去掉 logo")
+            ffmpegutil.remove_45_bili_logo(video_width,video_height,logpos,new_video_path)
         return new_video_path
 
     def adjust_video_crop(self,video_path,video_title):
@@ -99,13 +100,18 @@ class CommonVideoCrop(object):
         video_end_clip = self.vd.video_add_end_transition(video_size_clip)
         print(" 增加结束特效 done")
         # 6、设置视频封面
+         # 新增黑底封面
+        black_bg_path = 'img/black_bg.png'
         title_en = self.translate_text(video_title,'en')
-        video_png_clip,cover_png_path = self.vd.generate_mask_cover(video_end_clip,video_path,video_title=title_en,postion=('top','center'))
+        video_png_clip,cover_png_path = self.vd.generate_black_mask_cover(video_end_clip,video_path,title_en,('center'),black_bg_path)
+        # video_png_clip,cover_png_path = self.vd.generate_mask_cover(video_end_clip,video_path,video_title=title_en,postion=('center','top'))
         edit_video_path = os.path.join(dir_path,video_title+'_edit.mp4')
         video_end_clip.write_videofile(edit_video_path,fps=24)
         new_cover_png_path = cover_png_path.replace("video_download","video_deliver")
         #复制cover 封面
         shutil.copyfile(cover_png_path, new_cover_png_path)
+       
+        
         #生成标题文件
         title_file_path =  os.path.join(final_save_dir_path,video_title+'.txt')
         self.write_title_file(title_en+'\n'+video_title,title_file_path)
@@ -142,7 +148,8 @@ class CommonVideoCrop(object):
             return
         dir_path = os.path.dirname(video_path)
         video_name = os.path.basename(video_path)
-        srt_en_file = os.path.join(dir_path,video_name[:-9]+'_en.srt')
+        # 修复 subtitles 不能识别路径的特殊字符
+        srt_en_file = os.path.join(dir_path,video_name[:-9].replace("！","").replace(",","").replace("，","")+'_en.srt')
         output_video_file = os.path.join(dir_path,video_name[:-9]+'_en.mp4')
         #构建字幕文件
         segments = file_to_subtitles(srt_file)
@@ -164,9 +171,9 @@ class CommonVideoCrop(object):
         return trans_text
     
 if __name__ == '__main__':
-    file_name = '/root/video_download/bili/雪柔睡不醒/2023-06-22/沉浸式体验小仓鼠女友30秒洗头.mp4'
-    title = '沉浸式体验小仓鼠女友30秒洗头'
+    file_name = '/root/video_download/bili/大山的农村人_1480975816/2023-06-30/好不容易找到一票大货，居然被放鸽子了，好在下午又重新找到一组_logo.mp4'
+    title = '好不容易找到一票大货，居然被放鸽子了，好在下午又重新找到一组'
     commonutil = CommonVideoCrop()
-    # commonutil.adjust_video_crop(file_name,title)
+    commonutil.adjust_video_crop(file_name,title)
     # commonutil.remove_bili_logo(file_name)
     

@@ -14,6 +14,47 @@
 link:
   - https://v.douyin.com/U7rFMX7/
   - https://v.douyin.com/i3RHh5/
+  - https://v.douyin.com/U431qJY/
+  - https://v.douyin.com/iFmXfCd/
+  - https://v.douyin.com/iFmTFBL/
+  - https://v.douyin.com/iFmQbA4/
+  - https://v.douyin.com/iFu8Juh/
+  - https://v.douyin.com/iFuMVhd/
+  - https://v.douyin.com/iFuttqA/
+  - https://v.douyin.com/iFb5Lyt/
+  - https://v.douyin.com/iFbkWgL/
+  - https://v.douyin.com/iFbmPP4/
+  - https://v.douyin.com/iFbub1B/
+  - https://v.douyin.com/iFbjvTd/
+  - https://v.douyin.com/iFbtWmf/
+  - https://v.douyin.com/iFb4eV5/
+  - https://v.douyin.com/iFbqtyj/
+  - https://v.douyin.com/iFbwqBo/
+  - https://v.douyin.com/iFb4Vpp/
+  - https://v.douyin.com/iFg1m8E/
+  - https://v.douyin.com/iFgSb3u/
+  - https://v.douyin.com/iFguPWj/
+  - https://v.douyin.com/iFgWgjx/
+  - https://v.douyin.com/iFgTxk1/
+  - https://v.douyin.com/iFp8gKj/
+  - https://v.douyin.com/iFpUV8L/
+  - https://v.douyin.com/iFgwe2x/
+  - https://v.douyin.com/iFpB6rP/
+  - https://v.douyin.com/iFpDxhS/
+  - https://v.douyin.com/iFpa9Sc/
+  - https://v.douyin.com/iFnGQoL/
+  - https://v.douyin.com/iFn9JTu/
+  - https://v.douyin.com/iFnXbmp/
+  - https://v.douyin.com/iFW1dff/
+  - https://v.douyin.com/iFWdhc4/
+  - https://v.douyin.com/iFW2PCc/
+  - https://v.douyin.com/iFWMXaL/
+  - https://v.douyin.com/iFWknEU/
+  - https://v.douyin.com/iFWkG8j/
+  - https://v.douyin.com/iFno63y/
+  - https://v.douyin.com/iFWrn16/
+  - https://v.douyin.com/iF3wbbv/
+
 
 # 下载保存位置, 默认当前文件位置
 # 必选
@@ -93,7 +134,7 @@ thread: 2
 # 目前只需要msToken、ttwid、odin_tt、passport_csrf_token、sid_guard
 # 可以动态添加, 程序会根据填的键查找，并没有写死, 如果抖音需要更多的cookie自己加上就行了
 cookies:
-  msToken: q79ZKPxpNZuEGCFZM2tMzVUkEMnzeRGtBclmClTgpAxdW3xJUiaiUGL4EWrr2gXjIhBSpNR7VyLFj49XARLUgnjRRXTlmqJXGmu2NZjT5OiTi3ziabOEZQ==
+  msToken: B2LA2UBzma81A0MU8dkgPwQDSS_j885veiwE4_cteiaz58NSQWMH8tPJrBPtNsjKfD1AMhpQAw82ouLSBe30tKajFbC09wnzIT1e0wD1VfMZGz3CJ8QBpg==
   ttwid: 1%7CtvwAzla_tHRMrUqJw_Z3KuQXyM-shAGcinPBpow2mHY%7C1675754228%7C09186d2387d53c1ed6066b655eb4de15f4944c89de4e1e680e25ba9ab31cdc4a
   odin_tt: a8d443cdd6e722938f40d9c72217b943c0105ff524985cb408949546b2f6391a3b05c38621075bec9172cda36080eb08efbadfa52c8c1397f53dcd86ffde8b17
   passport_csrf_token: ee950cc56d9b3cc651c4eb724546f6fc
@@ -105,4 +146,3 @@ cookies:
 # 格式: "name1=value1; name2=value2;" 注意要加冒号
 # 冒号中的内容包括不限于以下键值对, 如果抖音需要更多的cookie自己加上就行了
 #cookie: "msToken=xxx; ttwid=xxx; odin_tt=xxx; passport_csrf_token=xxx; sid_guard=xxx;"
-

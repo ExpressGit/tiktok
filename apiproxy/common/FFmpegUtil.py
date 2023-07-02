@@ -19,7 +19,7 @@ class FFmpeg(object):
         self.editvdo = editvdo
         self.addlogo = addlogo
         self.addmusic = addmusic
-        self.vdo_time, self.vdo_width, self.vdo_height, self.attr_dict = self.get_attr()
+        # self.vdo_time, self.vdo_width, self.vdo_height, self.attr_dict = self.get_attr()
         self.editvdo_path = os.path.dirname(editvdo)
         self.editvdo_name = os.path.basename(editvdo)
 
@@ -61,7 +61,7 @@ class FFmpeg(object):
         else:
             return False
         
-    def remove_45_bili_logo(self,video_width,video_height,deposit=None):
+    def remove_45_bili_logo(self,video_width,video_height,logo_position,deposit=None):
         """
         去除bili水印(4:5视频)
         :param roi:水印坐标 左上方，右上方，右下方logo
@@ -70,24 +70,81 @@ class FFmpeg(object):
         if os.path.exists(deposit):
             os.remove(deposit)
         # ffmpeg -i 'a.mp4' -b:v 3441k -vf "delogo=x=1593:y=30:w=320:h=80:show=0" -c:a copy "no_logo.mp4"
-        x_right = video_width*0.65
+        w = 700
+        h = 200
+        x_right = video_width*0.60
         h_bottom = video_height*0.9
+        if video_height<=930:
+            w = 130
+            h = 60
         
-        strcmd = 'ffmpeg  -i "{}" -b:v 3440k -vf "delogo=x="{}":y=60:w=700:h=200:show=0,delogo=x=50:y=60:w=700:h=200:show=0,delogo=x="{}":y="{}":w=700:h=200:show=0" -c:a copy "{}" '.format(
-            self.editvdo,x_right,x_right,h_bottom,deposit)
+        if logo_position == 'rightbottom':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x={}:y={}:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo,x_right,h_bottom,w,h,deposit)
+
+        if logo_position == 'righttop':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x={}:y=60:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo,x_right,w,h,deposit)
+
+        if logo_position == 'lefttop':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x=50:y=60:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo,w,h,deposit)
+        
+        if logo_position == 'leftbottom':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x=50:y={}:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo,h_bottom,w,h,deposit)
+        
+        if logo_position == 'empty':
+            strcmd = 'ffmpeg  -i "{}"  -c:a copy "{}" '.format(
+            self.editvdo, deposit)
+       
+        print("remove_45_bili_logo {} strcmd: {}".format(video_width,strcmd))
         result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
 
-    def remove_169_bili_logo(self,video_width,video_height,deposit=None):
+    def remove_169_bili_logo(self,video_width,video_height,logo_position,deposit=None):
         """
         去除bili水印 16:9
         :param roi:水印坐标 左上方，右上方，右下方logo
         :return: True/False
         """
         if os.path.exists(deposit):
-            os.remove(deposit)
+            os.remove(deposit);
+        # fix 852*480
+        w = 260
+        h = 80
+        if video_width<=680 :
+            w = 160
+            h = 50
+        elif video_width<=950:
+            w = 200
+            h = 60
+            
         # ffmpeg -i 'a.mp4' -b:v 3441k -vf "delogo=x=1593:y=30:w=320:h=80:show=0" -c:a copy "no_logo.mp4"
-        strcmd = 'ffmpeg  -i "{}" -b:v 3440k -vf "delogo=x=1593:y=30:w=320:h=80:show=0,delogo=x=30:y=30:w=320:h=80:show=0,delogo=x=1593:y=1000:w=320:h=50:show=0" -c:a copy "{}" '.format(
+        x_right = video_width*0.7
+        h_bottom = video_height*0.85
+        # rightbottom，righttop，lefttop，leftbottom,empty
+
+        if logo_position == 'rightbottom':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x={}:y={}:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo, x_right,h_bottom,w,h,deposit)
+
+        if logo_position == 'righttop':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x={}:y=30:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo, x_right,w,h,deposit)
+
+        if logo_position == 'lefttop':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x=30:y=30:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo,w,h,deposit)
+        
+        if logo_position == 'leftbottom':
+            strcmd = 'ffmpeg  -i "{}" -vf "delogo=x=30:y={}:w={}:h={}:show=0" -c:a copy "{}" '.format(
+            self.editvdo, h_bottom,w,h,deposit)
+        
+        if logo_position == 'empty':
+            strcmd = 'ffmpeg  -i "{}"  -c:a copy "{}" '.format(
             self.editvdo, deposit)
+
+        print("remove_169_bili_logo {} strcmd: {}".format(video_width,strcmd))
         result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
     
     def edit_metadata(self,deposit=None):
@@ -205,7 +262,7 @@ class FFmpeg(object):
             return False
 
 if __name__ == '__main__':
-    video_path = '/root/video_download/bili/浅影阿_/2023-05-17/周董封神之作！《七里香》宿舍姐妹甜美翻唱！.mp4'
-    deposit = '/root/video_download/bili/浅影阿_/2023-05-17/周董封神之作！《七里香》宿舍姐妹甜美翻唱！_remove_logo.mp4'
+    video_path = '/root/video_download/douyin/user_小透明/post/2023-07-01/2023-07-01 11.18.00_哦一颗新鲜的土豆/哦一颗新鲜的土豆_edit.mp4'
+    deposit = '/root/video_download/douyin/user_小透明/post/2023-07-01/2023-07-01 11.18.00_哦一颗新鲜的土豆/哦一颗新鲜的土豆_new.mp4'
     ffmpegUtil = FFmpeg(video_path)
-    ffmpegUtil.remove_bili_logo(deposit)
+    ffmpegUtil.edit_metadata(deposit)

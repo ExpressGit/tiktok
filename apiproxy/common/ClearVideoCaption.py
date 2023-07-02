@@ -229,3 +229,5 @@ if __name__ == '__main__':
     output_path = '/root/video_download/bili/浅影阿_/2023-05-27/remove'
     clear_logo_caption(video_path,output_path)
     
+  
+    

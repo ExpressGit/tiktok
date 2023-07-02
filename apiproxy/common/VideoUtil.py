@@ -6,15 +6,19 @@ import requests
 import json
 import time
 import copy
-import os
+import os,sys
 import hashlib
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from moviepy.editor import *
+from apiproxy.common.utils import Utils
 import random
 from moviepy.video.tools.drawing import circle
+from PIL import Image
 
 class VideoRead(object):
     def __init__(self, root_dir=None):
         self.root_dir = root_dir  # 所有类型视频的根目录
+        self.config_dir = '/root/workspace/tiktok'
 
     def findAllFiles(self):
         # 读取所有视频文件
@@ -58,6 +62,18 @@ class VideoRead(object):
             if file.endswith('.mp4'):
                 youtube_video_list.append(file)
         return douyin_video_list,bili_video_list,youtube_video_list
+
+    def getVideoLogoPostion(self,config_name='bili'):
+        """
+        获取每个up主对应的logo位置
+        """
+        yamlPath = os.path.join(self.config_dir, config_name+"_config.yml")
+        util = Utils()
+        configModelDict = util.get_video_config_dict(yamlPath)
+        links = configModelDict['link']
+        logpos = configModelDict['logops']
+        link_logpos_dict = {links[i].replace("https://space.bilibili.com/",""): logpos[i] for i in range(len(links))}
+        return link_logpos_dict
 
 
 class VideoUtil(object):
@@ -130,7 +146,7 @@ class VideoUtil(object):
         :return:
         """
         video = VideoFileClip(orign_file_path)
-        result = video.fl_image(handle_frame)
+        result = video.fl_image(self.handle_frame)
         result.write_videofile(dest_file_path)
     
     
@@ -239,7 +255,7 @@ class VideoUtil(object):
         """
         #宽、高
         video_width,video_height = video_clip.w,video_clip.h
-        x1,y1,x2,y2 = video_width*0.1,video_height*0.1,video_width*0.9,video_height*0.95
+        x1,y1,x2,y2 = video_width*0.1,video_height*0.1,video_width*0.9,video_height
         width, height = x2 - x1, y2 - y1
         cropped_video = video_clip.crop(x1=x1, y1=y1, x2=x2, y2=y2).resize((width, height))
         return cropped_video
@@ -258,7 +274,7 @@ class VideoUtil(object):
                 # lambda c:vfx.colorx(c,0.5),
                 lambda c:vfx.speedx(c,1.3),
                 # lambda c:vfx.rotate(c,3), # 旋转3度
-                lambda c:vfx.painting(c,1.1), # 油画特效3秒
+                # lambda c:vfx.painting(c,1.1), # 油画特效3秒
                 # lambda c:vfx.loop(c,n=2),  # 循环1次
                 # lambda c:vfx.time_symmetrize(c), #倒放
                 # lambda c:clip[::-1] #倒放
@@ -322,52 +338,107 @@ class VideoUtil(object):
         final_clip = CompositeVideoClip([video_clip,logo])
         return final_clip
     
-    def vid_title_en_split(self,video_title):
+    def cal_font_size(self,video_title,video_width,video_height,font_type):
+        """
+        计算字体大小
+        """
+        font_size_samll = 55
+        font_size_medium = 80
+        font_size_large = 100
+        font_size = 40
+        n = 1
+        if video_width > 1800:
+            n = 2
+        elif video_width > 1200:
+            n = 1.5
+        elif video_width > 700:
+            n = 1
+        else:
+            n = 0.6
+        # 中文 或 英文 字符长度 不同
+        words_n = 1
+        if font_type == 'cn':
+            words_n = len(video_title.split())
+        else:
+            words_n = len(video_title.split(' '))
+        if words_n>=12:
+            font_size = font_size_samll * n
+        elif words_n>=7:
+            font_size = font_size_medium * n
+        elif words_n>=4:
+            font_size = font_size_large * n
+        else:
+            font_size = font_size_large * n
+        return font_size
+
+    def vid_title_en_split(self,video_title,video_width,video_height):
         '''
         设置封面标题，每N个字符插入\n
         '''
         res = ""
+        n = 4
         font_size = 40
-        words = video_title.split()  # 将原始字符串分割成单词列表
-        if len(words)>12:
-            font_size=60
-        elif len(words)>9:
-            font_size = 80
-        elif len(words)>5:
-            font_size = 100
-        else:
-            font_size = 100
+        font_size = self.cal_font_size(video_title,video_width,video_height,'en')
         # for i in range(0, len(words), n):
         #     res += " ".join(words[i:i+n]) + "\n"
         # # 去掉最后一个 N
         # res = res[:-2]
-        video_title = video_title.replace(",","\n").replace("，","\n").replace(".","\n").replace("!","\n")
-        print(video_title)
-        return video_title,font_size
+        # res = video_title.replace(",","\n").replace("，","\n").replace(".","\n").replace("!","\n").replace("?","\n")
+        if not "\n" in res:
+            res = ""
+            words= video_title.split(' ')
+            for i in range(0, len(words), n):
+                res += " ".join(words[i:i+n]) + "\n"
+            res = res[:-2]
+        return res,font_size
     
-    def vid_title_cn_split(self,video_title,n):
+    def vid_title_cn_split(self,video_title,video_width,video_height):
         '''
         设置封面标题，每N个字符插入\n
         '''
         res = ""
-        font_size = 40
-        words = video_title.split()  # 将原始字符串分割成单词列表
-        if len(words)>12:
-            font_size=40
-        elif len(words)>9:
-            font_size = 60
-        elif len(words)>5:
-            font_size = 80
-        else:
-            font_size = 100
-        res = ""
+        n = 4
+        font_size = self.cal_font_size(video_title,video_width,video_height,'cn')
         for i in range(0, len(video_title), n):
-            res += s[i:i+n] + "N"
+            res += video_title[i:i+n] + "\n"
         # 去掉最后一个 N
         res = res[:-2]
-        print(res)
         return res,font_size
 
+    def generate_black_mask_cover(self,video_clip,video_path,video_title,postion,black_bg_path):
+            """
+            设置黑色背景封面
+            """
+            img_temp_dir = '/root/workspace/imgtemp'
+            FONT_URL = 'apiproxy/font/HYBiRanTianTianQuanW-2.ttf'
+            cover_video_png = video_path[:-4]+'_new_black_cover.png'
+            #宽、高
+            video_width,video_height = video_clip.w,video_clip.h
+            # 打开图片
+            image = Image.open(black_bg_path)
+            # 定义裁剪区域（左上角坐标和右下角坐标）
+            left = 0
+            top = 0
+            right = video_width
+            bottom = video_height
+            # 裁剪图片
+            cropped_image = image.crop((left, top, right, bottom))
+            save_bg_cover_temp_path = os.path.join(img_temp_dir,'bg_temp_black.png')
+            # 保存裁剪后的图片
+            cropped_image.save(save_bg_cover_temp_path)
+            #读取视频
+            img_clip = ImageClip(save_bg_cover_temp_path).set_duration(1)
+            # 文字视频
+            video_new_title,font_size = self.vid_title_en_split(video_title,video_width,video_height)
+            print(video_new_title)
+            text_clip = (TextClip(video_new_title,fontsize=font_size,font=FONT_URL,color='yellow',method='label')
+                        .set_position(postion)
+                        .set_duration(1))
+
+            # 合成视频
+            composite_video_clip = CompositeVideoClip([img_clip,text_clip],size =img_clip.size)
+            composite_video_clip.save_frame(cover_video_png)
+            return composite_video_clip,cover_video_png
 
     def generate_mask_cover(self,video_clip,video_path,video_title,postion):
             """
@@ -380,15 +451,20 @@ class VideoUtil(object):
             duration = video_clip.duration
             cover_video_png = video_path[:-4]+'_new_cover.png'
             img_save_path = os.path.join(img_temp_dir,"frame.png")
+            #宽、高
+            video_width,video_height = video_clip.w,video_clip.h
             #保存第一帧
-            video_clip.save_frame(img_save_path,random.randint(1,int(duration)-3))
+            if duration>15:
+                video_clip.save_frame(img_save_path,random.randint(1,int(duration)-10))
+            else:
+                video_clip.save_frame(img_save_path,random.randint(1,int(duration)-5))
             #设置封面标题
             #读取视频
             img_clip = ImageClip(img_save_path).set_duration(1)
             # 文字视频
-            video_new_title,font_size = self.vid_title_en_split(video_title=video_title)
+            video_new_title,font_size = self.vid_title_en_split(video_title,video_width,video_height)
             print(video_new_title)
-            text_clip = (TextClip(video_new_title,fontsize=font_size,font=FONT_URL,color='black',method='label')
+            text_clip = (TextClip(video_new_title,fontsize=font_size,font=FONT_URL,color='yellow',method='label')
                         .set_position(postion)
                         .set_duration(1))
 
@@ -412,17 +488,21 @@ if __name__ == '__main__':
     root_dir = '/root/video_download/douyin'
     date_str = '2023-06-07'
     vd = VideoUtil()
-    file_name = '/root/video_download/douyin/user_小透明/post/2021-01-19/2021-01-19 15.35.34_你说你冷我让你多穿点你说你以前冷时前女友/2021-01-19 15.35.34_你说你冷我让你多穿点你说你以前冷时前女友_video.mp4'
+    file_name = '/root/video_download/bili/披萨OB/2023-06-27/亚运会阵容已经敲定，Bin,369,jiejie,knight,阿水,meiko，这俩上单你更看好谁？.mp4'
     file_name_new = '/root/video_download/douyin/user_小透明/post/2021-01-19/2021-01-19 15.35.34_你说你冷我让你多穿点你说你以前冷时前女友/你说你冷我让你多穿点你说你以前冷时前女友_new.mp4'
-    title = 'You said you are cold, let me wear more, you said that you used to be cold, the ex -girlfriend when you were cold'
-    # video_raw_clip,duration,video_width,video_height,fps,audio = vd.get_video_basic_info(file_name)
+    title = "Why haven't you found the entrance of a new home yet?Baoan Xuerou has already gone to ensure that all the small hamsters are about to enter, right?"
+    res,font_size = vd.vid_title_en_split(title,1914,3345)
+    print(res,font_size)
+    video_raw_clip,duration,video_width,video_height,fps,audio = vd.get_video_basic_info(file_name)
+    print(duration,video_width,video_height,fps)
+    print(video_raw_clip.bitrate)
     # vd.generate_mask_cover(video_raw_clip,file_name,title,'center')
 
     #查看md5 是否重复
-    origin_md5 = vd.get_video_md5(file_name)
-    print(origin_md5)
-    new_md5 = vd.get_video_md5(file_name_new)
-    print(new_md5)
+    # origin_md5 = vd.get_video_md5(file_name)
+    # print(origin_md5)
+    # new_md5 = vd.get_video_md5(file_name_new)
+    # print(new_md5)
 
     # new_file_name = file_name[:-4]
     # print(new_file_name+"_transition.mp4")

@@ -18,3 +18,4 @@ Pillow
 git+https://github.com/m-bain/whisperx.git
 uninstall opencv-python
 opencv-python-headless
+SpeechRecognition

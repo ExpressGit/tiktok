@@ -28,7 +28,7 @@ import time
 import hashlib
 import moviepy
 import apiproxy
-
+import yaml,tqdm
 
 class Utils(object):
     def __init__(self):
@@ -222,7 +222,17 @@ class Utils(object):
         """
         with open(file_path, 'a') as file:
             file.write("####&&&&")
-    
+
+    def get_video_config_dict(self,yamlPath):
+        if not os.path.exists(yamlPath):
+            print("yaml path 不存在:",yamlPath)
+            return
+        yamlPath = yamlPath
+        print(yamlPath)
+        f = open(yamlPath, 'r', encoding='utf-8')
+        cfg = f.read()
+        configDict = yaml.load(stream=cfg, Loader=yaml.FullLoader)
+        return configDict
     
 if __name__ == "__main__":
     pass

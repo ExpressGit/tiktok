@@ -21,7 +21,7 @@ import argparse
 import os
 import sys
 import json
-import yaml
+import yaml,tqdm
 import time
 
 from apiproxy.douyin.douyin import Douyin
@@ -290,7 +290,7 @@ def main():
                   avatar=configModel["avatar"], resjson=configModel["json"],
                   folderstyle=configModel["folderstyle"])
 
-    for link in configModel["link"]:
+    for link in tqdm.tqdm(configModel["link"]):
         print("--------------------------------------------------------------------------------")
         print("[  提示  ]:正在请求的链接: " + link + "\r\n")
         url = dy.getShareLink(link)
