@@ -173,7 +173,7 @@ class Douyin(object):
         awemeList = []
         increaseflag = False
         numberis0 = False
-
+        print(" begin 抓取数据阶段,increase:{}, increaseflag:{},number:{}, database:{}".format(increase,increaseflag,number,self.database))
         print("[  提示  ]:正在获取所有作品数据请稍后...\r")
         print("[  提示  ]:会进行多次请求，等待时间较长...\r\n")
         times = 0
@@ -207,7 +207,10 @@ class Douyin(object):
                         print("[  提示  ]:重复请求该接口" + str(self.timeout) + "s, 仍然未获取到数据")
                         return awemeList
 
-
+            if numflag:
+                dataitems = datadict["aweme_list"][:number]
+                datadict["aweme_list"] = dataitems
+                
             for aweme in datadict["aweme_list"]:
                 if self.database:
                     # 退出条件
@@ -234,15 +237,18 @@ class Douyin(object):
                         break
                     if increase and numflag and numberis0 and increaseflag:
                         break
+                    
+                    print(" doing 抓取数据阶段,increase:{}, number:{}, database:{},numberis0:{},numflag:{}".format(increase,number,self.database,numberis0,numflag))
                 else:
                     if numflag and numberis0:
                         break
-
+                
                 if numflag:
                     number -= 1
                     if number == 0:
                         numberis0 = True
-
+                        
+                print('下载数量update:',number)
                 # 清空self.awemeDict
                 self.result.clearDict(self.result.awemeDict)
 
@@ -260,6 +266,10 @@ class Douyin(object):
                 if self.result.awemeDict is not None and self.result.awemeDict != {}:
                     awemeList.append(copy.deepcopy(self.result.awemeDict))
 
+            # fix : 增量模式，但是 指定下载数量的视频已全部下载完，则更新increaseflag=True
+            if increase:
+                increaseflag = True
+            
             if self.database:
                 if increase and numflag is False and increaseflag:
                     print("\r\n[  提示  ]: [主页] 下作品增量更新数据获取完成...\r\n")

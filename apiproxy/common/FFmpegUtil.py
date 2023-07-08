@@ -154,7 +154,7 @@ class FFmpeg(object):
         :return: True/False
         ffmpeg -i a.mp4 -vcodec copy -acodec copy -metadata comment=sanyuanchuanmei -metadata description=sanyuanchuanmei  b.mp4 -y
         """
-        strcmd = 'ffmpeg -i "{}" -vcodec copy -acodec copy -metadata comment=sanyuanchuanmei -metadata description=sanyuanchuanmei "{}" -y'.format(
+        strcmd = 'ffmpeg -i "{}" -vcodec copy -acodec copy -metadata comment='' -metadata description='' "{}" -y'.format(
                     self.editvdo,deposit)
         result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
         return True

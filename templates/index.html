@@ -2,20 +2,14 @@
 <html lang="zhxx">
 
 <head>
-    <title>抖音去水印工具</title>
+    <title>视频处理工具</title>
     <!-- Meta tag Keywords -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8"/>
-    <meta name="keywords" content="抖音去水印工具"/>
+    <meta name="keywords" content="视频处理工具"/>
     <meta name="referrer" content="never">
     <script>
-        addEventListener("load", function () {
-            setTimeout(hideURLbar, 0);
-        }, false);
-
-        function hideURLbar() {
-            window.scrollTo(0, 1);
-        }
+   
     </script>
     <!-- //Meta tag Keywords -->
     <!-- /Favicons -->
@@ -27,7 +21,7 @@
           media="all"/>
     <!--//Style-CSS -->
     <!-- font-awesome-icons -->
-    <link href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- <link href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
     <!-- //font-awesome-icons -->
     <!-- naranja 右下角弹框提示 https://github.com/e1016/naranja-->
     <link rel="stylesheet" href="//unpkg.com/naranja@1.0.1/lib/naranja.min.css" type="text/css"/>
@@ -48,31 +42,14 @@
             <br>
             <p>支持视频/图集/直播解析,粘贴视频/图集/直播分享链接时无需删除文案,但如果链接正确但解析失败请删掉文案后重试 https://v.douyin.com/kcvMpuN/</p>
             {#            <p>2.支持直播解析,需要网页版直播链接 https://live.douyin.com/343806013144</p>#}
-            <p>关于抖音批量下载与去水印工具的更多实现细节请点击: <a href="https://www.imgyh.com/archives/41.html" target="_blank"
-                                            style="color:#00c4b6;">抖音批量下载与去水印工具</a></p>
+            <p>抖音批量下载与去水印工具</a></p>
             <form id="form1" onsubmit="return false" action="#" method="post" class="d-flex error-page-form">
-                {#                以前需要手动选择 图片 或者 视频 现在加了自动判断#}
-                {#                <div class="select">#}
-                {#                    <select name="awemeType" required="required">#}
-                {#                        <option value="0" selected="selected">视频</option>#}
-                {#                        <option value="1">图集</option>#}
-                {#                    </select>#}
-                {#                </div>#}
+ 
 
                 <input type="text" placeholder="粘贴视频/图集/直播分享地址" name="share_link" required="required">
                 <button type="reset" onclick="SendAjax()">解析</button>
             </form>
-            {#            <div class="social-coming-icons">#}
-            {#                <a href="#" title="Facebook" class="footer-fb"><span class="fa fa-facebook"#}
-            {#                                                                     aria-hidden="true"></span></a>#}
-            {#                <a href="#" title="Twitter" class="footer-tw"><span class="fa fa-twitter"#}
-            {#                                                                    aria-hidden="true"></span></a>#}
-            {#                <a href="#" title="Google Plus" class="footer-gg"><span class="fa fa-google-plus"#}
-            {#                                                                        aria-hidden="true"></span></a>#}
-            {#                <a href="#" title="Linkedin" class="footer-lin"><span class="fa fa-linkedin"#}
-            {#                                                                      aria-hidden="true"></span></a>#}
-            {#            </div>#}
-
+            
         </div>
         <div class="errors-16-mid">
             <div class="loading" id="loading">
@@ -132,16 +109,11 @@
             </div>
 
         </div>
+    
+    </div>
 
-    </div>
-    <div class="copy-right">
-        <p>Copyright &copy; 2021-2023.我的博客 <a href="https://www.imgyh.com/" target="_blank">GYH's Blog</a> && 项目地址 <a
-                href="https://github.com/imgyh/douyin" target="_blank">Github</a>
-            All rights reserved.</p>
-    </div>
 </div>
 
-{# 视频预览效果 https://blog.csdn.net/qq_45140694/article/details/115266928 #}
 <div id="show-video">
     <a class="video-close">
         <span>
@@ -153,7 +125,6 @@
             </svg>
         </span>
     </a>
-    {# https://blog.csdn.net/seeeeeeeeeee/article/details/119981594 #}
     <video src="" id="pre_video" controls="controls" poster=""></video>
 </div>
 

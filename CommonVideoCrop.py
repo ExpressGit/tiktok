@@ -2,7 +2,7 @@
 Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
 Date: 2023-06-22 20:45:56
 LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
-LastEditTime: 2023-07-02 14:42:01
+LastEditTime: 2023-07-03 22:01:28
 FilePath: /tiktok/CommonVideoCrop.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -110,7 +110,6 @@ class CommonVideoCrop(object):
         new_cover_png_path = cover_png_path.replace("video_download","video_deliver")
         #复制cover 封面
         shutil.copyfile(cover_png_path, new_cover_png_path)
-       
         
         #生成标题文件
         title_file_path =  os.path.join(final_save_dir_path,video_title+'.txt')
@@ -139,6 +138,27 @@ class CommonVideoCrop(object):
                         os.remove(file)
         print(" 冗余 视频 删除 完成 done")
 
+    
+    def delete_folder_by_date(self,del_dir,date):
+        """
+            删除指定文件夹，保留磁盘空间
+        """
+        folder_path = del_dir  # 替换为你要操作的文件夹路径
+        
+        for folder in os.listdir(folder_path):
+            if folder.startswith(date):
+                folder_to_delete = os.path.join(folder_path, folder)
+                try:
+                    shutil.rmtree(folder_path)  # 删除空文件夹
+                    print(f"已成功删除文件夹：{folder_to_delete}")
+                except OSError as e:
+                    print(f"删除文件夹失败：{folder_to_delete}，错误信息：{e}")
+
+        # 调用函数并传入日期作为参数
+        #delete_folder_by_date("2021-01-01")
+    
+    
+    
     def add_video_subtitle(self,video_path,srt_file):
         '''
         给视频添加字幕

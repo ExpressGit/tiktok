@@ -2,7 +2,7 @@
 Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
 Date: 2023-06-23 21:59:40
 LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
-LastEditTime: 2023-06-29 21:38:28
+LastEditTime: 2023-07-08 16:13:25
 FilePath: /tiktok/apiproxy/common/AudioRecUtil.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -155,8 +155,9 @@ def ch_translate_to_en(segments):
         return
     for seg in segments:
         times = seg[0]
-        seg_en = {'start':times[0],'end':times[1],'text':translate_text(seg[1],'en')}
-        en_segments.append(seg_en)
+        if len(seg[1])>0:
+            seg_en = {'start':times[0],'end':times[1],'text':translate_text(seg[1],'en')}
+            en_segments.append(seg_en)
     return en_segments
 
 def add_subtitle_in_video(video_path,srt_file,output_video_path):
@@ -165,19 +166,19 @@ def add_subtitle_in_video(video_path,srt_file,output_video_path):
     print(" 视频 字幕 添加完成 done")
 
 if __name__ == '__main__':
-    video_file = '/root/video_download/bili/大山的农村人/2023-06-18/弟弟想和朋友合伙买车，被我反对了，现在又想一个人单干.mp4'
+    # video_file = '/root/video_download/bili/大山的农村人/2023-06-18/弟弟想和朋友合伙买车，被我反对了，现在又想一个人单干.mp4'
     audio_file = '/root/video_download/bili/大山的农村人/2023-06-18/a.wav'
-    origin_srt_file = '/root/video_download/bili/大山的农村人/2023-06-18/didi.srt'
-    srt_file = '/root/video_download/bili/大山的农村人/2023-06-18/didi_en.srt'
-    video_output_file = '/root/video_download/bili/大山的农村人/2023-06-18/a_subtitle.mp4'
+    origin_srt_file = '/root/video_download/bili/我才是熊猫大G_267776898/2023-07-07/韩国人掏出烬中单，大G嘴都笑歪了，12分钟直接推门牙，对面人都傻了！_P01_中文（自动生成）.srt'
+    srt_file = '/root/video_download/bili/我才是熊猫大G_267776898/2023-07-07/didi_en.srt'
+    # video_output_file = '/root/video_download/bili/大山的农村人/2023-06-18/a_subtitle.mp4'
     # get_audio_file(video_file,audio_file)
-    segments = audio_to_text(audio_file)
-    print(segments)
+    # segments = audio_to_text(audio_file)
+    # print(segments)
     # audio_to_text_whisper(audio_file)
     # audio_to_text_google_api(audio_file)
     #构建字幕文件
-    # segments = file_to_subtitles(origin_srt_file)
-    # segments_en = ch_translate_to_en(segments)
-    # create_srt_file(segments_en,srt_file)
+    segments = file_to_subtitles(origin_srt_file)
+    segments_en = ch_translate_to_en(segments)
+    create_srt_file(segments_en,srt_file)
     
     # add_subtitle_in_video(video_file,srt_file,video_output_file)

@@ -311,6 +311,7 @@ def main():
                 print("--------------------------------------------------------------------------------")
                 print("[  提示  ]:正在请求用户主页模式: " + mode + "\r\n")
                 if mode == 'post' or mode == 'like':
+                    print("post_number:",configModel["number"][mode])
                     datalist = dy.getUserInfo(key, mode, 35, configModel["number"][mode], configModel["increase"][mode])
                     if datalist is not None and datalist != []:
                         modePath = os.path.join(userPath, mode)

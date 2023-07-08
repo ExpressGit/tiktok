@@ -54,6 +54,13 @@ link:
   - https://v.douyin.com/iFno63y/
   - https://v.douyin.com/iFWrn16/
   - https://v.douyin.com/iF3wbbv/
+  - https://v.douyin.com/iBT1cBs/
+  - https://v.douyin.com/iB3bJtv/
+  - https://v.douyin.com/iBTMEas/
+  - https://v.douyin.com/iBTYS33/
+  - https://v.douyin.com/iBTkLFx/
+  - https://v.douyin.com/iBTYXRt/
+  - https://v.douyin.com/iBTAKkw/
 
 
 # 下载保存位置, 默认当前文件位置
@@ -101,8 +108,8 @@ mode:
 # 下载作品个数设置
 # 可选
 number:
-  post: 0     # 主页下作品下载个数设置, 默认为0 全部下载
-  like: 1     # 主页下喜欢下载个数设置, 默认为0 全部下载
+  post: 25     # 主页下作品下载个数设置, 默认为0 全部下载
+  like: 20     # 主页下喜欢下载个数设置, 默认为0 全部下载
   allmix: 1   # 主页下合集下载个数设置, 默认为0 全部下载
   mix: 1      # 单个合集下作品下载个数设置, 默认为0 全部下载
   music: 1    # 音乐(原声)下作品下载个数设置, 默认为0 全部下载
@@ -120,25 +127,25 @@ database: True # 如果不使用数据库, 增量更新将不可用
 # 可选
 increase:
   post: True     # 是否开启主页作品增量下载(True/False), 默认为False
-  like: True     # 是否开启主页喜欢增量下载(True/False), 默认为False
-  allmix: True   # 是否开启主页合集增量下载(True/False), 默认为False
-  mix: True      # 是否开启单个合集下作品增量下载(True/False), 默认为False
-  music: True    # 是否开启音乐(原声)下作品增量下载(True/False), 默认为False
+  like: False     # 是否开启主页喜欢增量下载(True/False), 默认为False
+  allmix: False   # 是否开启主页合集增量下载(True/False), 默认为False
+  mix: False      # 是否开启单个合集下作品增量下载(True/False), 默认为False
+  music: False    # 是否开启音乐(原声)下作品增量下载(True/False), 默认为False
 
 # 设置线程数, 默认5个线程
 # 可选
-thread: 2
+thread: 4
 
 # cookie 请登录网页抖音后F12查看
 # cookies 和 cookie 二选一, 要使用这种形式, 请注释下面的cookie
 # 目前只需要msToken、ttwid、odin_tt、passport_csrf_token、sid_guard
 # 可以动态添加, 程序会根据填的键查找，并没有写死, 如果抖音需要更多的cookie自己加上就行了
 cookies:
-  msToken: B2LA2UBzma81A0MU8dkgPwQDSS_j885veiwE4_cteiaz58NSQWMH8tPJrBPtNsjKfD1AMhpQAw82ouLSBe30tKajFbC09wnzIT1e0wD1VfMZGz3CJ8QBpg==
-  ttwid: 1%7CtvwAzla_tHRMrUqJw_Z3KuQXyM-shAGcinPBpow2mHY%7C1675754228%7C09186d2387d53c1ed6066b655eb4de15f4944c89de4e1e680e25ba9ab31cdc4a
-  odin_tt: a8d443cdd6e722938f40d9c72217b943c0105ff524985cb408949546b2f6391a3b05c38621075bec9172cda36080eb08efbadfa52c8c1397f53dcd86ffde8b17
-  passport_csrf_token: ee950cc56d9b3cc651c4eb724546f6fc
-  sid_guard: f4e5be2a78a337f01bb08603eb5f1563%7C1685579627%7C5183997%7CMon%2C+31-Jul-2023+00%3A33%3A44+GMT
+  msToken: 7hh-8ox13Q9_tTuPSbsK8zaZYJ-ZkJV8YZlia3zFYPCSWaeag-fNvzz-HDjSFVxThfGT5uVpFiAMbw-M5BHoiaMU_ZJf7e3oP4fxBu29lYr2zHUX1b4g5w==
+  ttwid: 1%7Cl6ewco_ttDK4xRGj53h1jNwJEpOVzkWLxBJXWYkcc9w%7C1688083763%7C7e0fcd9b6afae02633474e85e81e9d80c931ea1f1434b208e91da494b1908d1e
+  odin_tt: 3e0ec51b9d5a66deece99cc3fcf0b5d11012308a305f849ae242fb92bc31fc0e90e62da664f28ecb00b1d8f58cbfb7ef6178021eba9885b902a411276fd08411
+  passport_csrf_token: abc15640a4e77dd318806d8721fa6bad
+  sid_guard: 29501639c13276f6287165818ccd0b23%7C1688085954%7C5181809%7CTue%2C+29-Aug-2023+00%3A09%3A23+GMT
   
 # cookie 请登录网页抖音后F12查看
 # cookies 和 cookie 二选一, 要使用这种形式, 请注释上面的cookies及包含的所有键值对

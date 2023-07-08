@@ -3,7 +3,7 @@
  # @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  # @Date: ${endday} 12:40:21
  # @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- # @LastEditTime: 2023-07-02 17:08:10
+ # @LastEditTime: 2023-07-08 19:54:17
  # @FilePath: /tiktok/download_corp_video.sh
  # @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 ### 
@@ -20,14 +20,18 @@ echo ${beginday}
 echo ${endday}
 
 # douyin
+echo "=====================================DouYinCommand donwload video begin====================================="
 python3 DouYinCommand.py -C False --config beauty 
+echo "=====================================DouYinCommand donwload video end====================================="
 if [ $? -eq 0 ]; then
     echo ${endday}" douyin download video success "
 else
     echo ${endday}" douyin download video failed "
     exit 1
 fi
+
 # video 流水线处理
+echo "=====================================DouYinVideoCrop crop video begin====================================="
 python3 DouYinVideoCrop.py ${beginday}
 if [ $? -eq 0 ]; then
     echo ${endday}" douyin corp video success "
@@ -35,10 +39,13 @@ else
     echo ${endday}" douyin corp video failed "
     exit 1
 fi
+echo "=====================================DouYinVideoCrop crop video end====================================="
 
 
 #bili
+echo "=====================================BiliCommand donwload video begin====================================="
 python3 BiliCommand.py -C False --config bili 
+echo "=====================================BiliCommand donwload video end====================================="
 if [ $? -eq 0 ]; then
     echo ${endday}" bili download video success "
 else
@@ -47,6 +54,7 @@ else
 fi
 
 # video 流水线处理
+echo "=====================================BiliVideoCrop crop video begin====================================="
 python3 BiliVideoCrop.py ${beginday}
 if [ $? -eq 0 ]; then
     echo ${endday}" bili corp video success "
@@ -54,4 +62,4 @@ else
     echo ${endday}" bili corp video failed "
     exit 1
 fi
-
+echo "=====================================BiliVideoCrop crop video end====================================="

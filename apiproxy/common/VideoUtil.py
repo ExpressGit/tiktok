@@ -342,7 +342,7 @@ class VideoUtil(object):
         """
         计算字体大小
         """
-        font_size_samll = 55
+        font_size_samll = 50
         font_size_medium = 80
         font_size_large = 100
         font_size = 40
@@ -351,7 +351,7 @@ class VideoUtil(object):
             n = 2
         elif video_width > 1200:
             n = 1.5
-        elif video_width > 700:
+        elif video_width > 772:
             n = 1
         else:
             n = 0.6
@@ -376,7 +376,7 @@ class VideoUtil(object):
         设置封面标题，每N个字符插入\n
         '''
         res = ""
-        n = 4
+        n = 3
         font_size = 40
         font_size = self.cal_font_size(video_title,video_width,video_height,'en')
         # for i in range(0, len(words), n):
