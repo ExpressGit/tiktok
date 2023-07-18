@@ -1,3 +1,11 @@
+'''
+Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+Date: 2023-07-15 20:36:20
+LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+LastEditTime: 2023-07-15 20:36:20
+FilePath: /tiktok/apiproxy/common/ImageUtil.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 #!/usr/bin/env python  
 # encoding: utf-8  
 
@@ -12,7 +20,7 @@
 @time: 2019-12-25 14:23 
 @description：图片工具类
 """
-import cv2,os
+import os
 from moviepy.video.VideoClip import ImageClip
 from moviepy.editor import VideoFileClip
 

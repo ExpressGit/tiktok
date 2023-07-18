@@ -1,0 +1,5 @@
+[default]
+BASE_URL = "https://www.tiktok.com/"
+HEADLESS = true
+LANG = "en"
+HOME_DIR = "/root/workspace/tiktok"

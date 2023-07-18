@@ -19,6 +19,8 @@ from flask import *
 from apiproxy.douyin.douyinapi import DouyinApi
 from apiproxy.douyin import douyin_headers
 import argparse
+from apiproxy.common.YoutuberVideo import YoutuberVideo
+import re
 
 
 def douyinwork(share_link, max_cursor, mode, cookie):
@@ -62,6 +64,40 @@ def douyinwork(share_link, max_cursor, mode, cookie):
 
     return datadict
 
+def youtubework(share_link):
+    yt = YoutuberVideo()
+    result,seriza_info = yt.download_from_embed_single_video(share_link)
+    return result
+
+def biliwork(share_link):
+    
+    pass
+
+def tiktok(share_link):
+    
+    pass
+
+
+def judge_link_type(url, cursor, mode, cookie):
+    """
+    判断url来自于哪个平台：youtube\douyin\bili\tiktok
+    tiktoke:https://www.tiktok.com/@honorofkingscamp/video/7253433005253872939?is_from_webapp=1&sender_device=pc
+    youtube:
+    """
+    platform = ''
+    if len(url)==0:
+        return False
+    if re.search(r"(v.douyin)+",url):
+        result = douyinwork(url, cursor, mode, cookie)
+    elif re.search(r"(youtube.com)+",url):
+        result = youtubework(url)
+    elif re.search(r"(bilibili.com)+",url):
+        result = biliwork(url)
+    elif re.search(r"(tiktok.com)+",url):
+        result = tiktok(url)
+    else:
+        result=''
+    return result
 
 def deal(mode=None):
     usefuldict = {}
@@ -83,7 +119,8 @@ def deal(mode=None):
 
     try:
         if share_link is not None and share_link != "":
-            usefuldict = douyinwork(share_link, cursor, mode, cookie)
+            usefuldict = judge_link_type(share_link, cursor, mode, cookie)
+            # usefuldict = douyinwork(share_link, cursor, mode, cookie)
             usefuldict["status_code"] = 200
     except Exception as e:
         usefuldict["status_code"] = 500

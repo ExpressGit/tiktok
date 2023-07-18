@@ -172,7 +172,7 @@ class Utils(object):
                 arr1[3], arr1[5], arr1[7], arr1[9], arr1[11], arr1[13], arr1[15], arr1[17]]
 
         return arr2
-
+    
     def _0x30492c(self, a, b):
         d = [i for i in range(256)]
         c = 0
@@ -227,7 +227,6 @@ class Utils(object):
         if not os.path.exists(yamlPath):
             print("yaml path 不存在:",yamlPath)
             return
-        yamlPath = yamlPath
         print(yamlPath)
         f = open(yamlPath, 'r', encoding='utf-8')
         cfg = f.read()

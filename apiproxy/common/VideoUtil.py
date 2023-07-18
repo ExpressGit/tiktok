@@ -67,12 +67,12 @@ class VideoRead(object):
         """
         获取每个up主对应的logo位置
         """
-        yamlPath = os.path.join(self.config_dir, config_name+"_config.yml")
+        yamlPath = os.path.join(self.config_dir,'config',config_name+"_config.yml")
         util = Utils()
         configModelDict = util.get_video_config_dict(yamlPath)
         links = configModelDict['link']
         logpos = configModelDict['logops']
-        link_logpos_dict = {links[i].replace("https://space.bilibili.com/",""): logpos[i] for i in range(len(links))}
+        link_logpos_dict = {links[i].replace("https://space.bilibili.com/","").replace("https://www.youtube.com/",''): logpos[i] for i in range(len(links))}
         return link_logpos_dict
 
 

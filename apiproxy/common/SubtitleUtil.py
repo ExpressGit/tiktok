@@ -2,103 +2,43 @@
 Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
 Date: 2023-06-23 21:59:40
 LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
-LastEditTime: 2023-07-08 16:13:25
+LastEditTime: 2023-07-18 20:37:18
 FilePath: /tiktok/apiproxy/common/AudioRecUtil.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
-import whisperx
 import gc,re,sys,os
-import torch
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.VideoClip import TextClip
 from moviepy.video.tools.subtitles import SubtitlesClip
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.tools import cvsecs
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from apiproxy.common.TranslateUtil import translate_text
 from apiproxy.common.FFmpegUtil import FFmpeg
-# from TranslateUtil import *
-# from FFmpegUtil import FFmpeg
-#来源：whisperX:https://github.com/m-bain/whisperX
+from faster_whisper import WhisperModel
+from apiproxy.common.TranslateUtil import translate_text
+#来源：https://github.com/guillaumekln/faster-whisper
 
-import speech_recognition as sr
 
-audio_file = '/root/video_download/douyin/user_00后的窝/post/2023-04-12/2023-04-12 17.00.44_选对一个好花洒幸福感翻一翻装修花洒水爱花/a.mp3'
 
-def audio_to_text(audio_file):
-    device = "cpu" 
-    model_type='large-v1'
-    batch_size = 2
-    compute_type = "int8"
-    prompt='以下是普通话的句子'
-    model = whisperx.load_model(model_type, device=device, compute_type=compute_type)
-    audio = whisperx.load_audio(audio_file)
-    result = model.transcribe(audio, batch_size=batch_size,language='zh',initial_prompt=prompt)
-    print(result["segments"]) # before alignment
-    # delete model if low on GPU resources
-    gc.collect(); torch.cuda.empty_cache(); del model
-    return result["segments"]
-
-def audio_to_text_whisper(audio_file):
-    r = sr.Recognizer()
-    harvard = sr.AudioFile(audio_file)
-    with harvard as source:
-        r.adjust_for_ambient_noise(source)
-        audio = r.record(source)
-    try:
-        print("Whisper thinks you said " + r.recognize_whisper(audio, language="zh"))
-    except sr.UnknownValueError:
-        print("Whisper could not understand audio")
-    except sr.RequestError as e:
-        print("Could not request results from Whisper")
-
-def audio_to_text_google_api(audio_file):
-    r = sr.Recognizer()
-    harvard = sr.AudioFile(audio_file)
-    with harvard as source:
-        r.adjust_for_ambient_noise(source)
-        audio = r.record(source)
-        
-    try:
-    # for testing purposes, we're just using the default API key
-    # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-    # instead of `r.recognize_google(audio)`
-        r.recognize_google(audio)
-        print("Google Speech Recognition thinks you said " + r.recognize_google(audio))
-    except sr.UnknownValueError:
-        print("Google Speech Recognition could not understand audio")
-    except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
-# 1. Transcribe with original whisper (batched)
-# model = whisperx.load_model(model_type, device=device, compute_type=compute_type)
-
-# audio = whisperx.load_audio(audio_file)
-# result = model.transcribe(audio, batch_size=batch_size,language='zh')
-# print(result["segments"]) # before alignment
-
-# delete model if low on GPU resources
-# import gc; gc.collect(); torch.cuda.empty_cache(); del model
-
-# c2. Align whisper output
-# model_a, metadata = whisperx.load_align_model(language_code='zh', device=device)
-# result = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
-
-# print(result["segments"]) # after alignment
-
-# # delete model if low on GPU resources
-# import gc; gc.collect(); torch.cuda.empty_cache(); del model_a
-
-# # 3. Assign speaker labels
-# diarize_model = whisperx.DiarizationPipeline(use_auth_token=YOUR_HF_TOKEN, device=device)
-
-# # add min/max number of speakers if known
-# diarize_segments = diarize_model(audio_file)
-# # diarize_model(audio_file, min_speakers=min_speakers, max_speakers=max_speakers)
-
-# result = whisperx.assign_word_speakers(diarize_segments, result)
-# print(diarize_segments)
-# print(result["segments"]) # segments are now assigned speaker ID
+def audio_to_text_by_fastwhisper(audio_file):
+    # model_size = "large-v1"
+    model_size = "small"
+    # Run on GPU with FP16
+    model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    # or run on GPU with INT8
+    # model = WhisperModel(model_size, device="cuda", compute_type="int8_float16")
+    # or run on CPU with INT8
+    # model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    segments_info = []
+    segments, info = model.transcribe(audio_file, beam_size=5,vad_filter=True,vad_parameters=dict(min_silence_duration_ms=500))
+    print("Detected language '%s' with probability %f" % (info.language, info.language_probability))
+    for segment in segments:
+        print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
+        #[((ta,tb),'some text'),...]
+        item = [(segment.start,segment.end),segment.text]
+        segments_info.append(item)
+    return segments_info
+    
 
 def create_srt_file(segments, output_file):
     with open(output_file, 'w') as f:
@@ -166,19 +106,28 @@ def add_subtitle_in_video(video_path,srt_file,output_video_path):
     print(" 视频 字幕 添加完成 done")
 
 if __name__ == '__main__':
-    # video_file = '/root/video_download/bili/大山的农村人/2023-06-18/弟弟想和朋友合伙买车，被我反对了，现在又想一个人单干.mp4'
-    audio_file = '/root/video_download/bili/大山的农村人/2023-06-18/a.wav'
-    origin_srt_file = '/root/video_download/bili/我才是熊猫大G_267776898/2023-07-07/韩国人掏出烬中单，大G嘴都笑歪了，12分钟直接推门牙，对面人都傻了！_P01_中文（自动生成）.srt'
-    srt_file = '/root/video_download/bili/我才是熊猫大G_267776898/2023-07-07/didi_en.srt'
-    # video_output_file = '/root/video_download/bili/大山的农村人/2023-06-18/a_subtitle.mp4'
+    video_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/这样的底道也不好跑啊，太费人了，比跑两天的高速还累!.mp4'
+    # audio_file = '/root/video_download/bili/大山的农村人_1480975816/2023-06-21/a.wav'
+    audio_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/这样的底道也不好跑啊，太费人了，比跑两天的高速还累!.wav'
+    # origin_srt_file = '/root/video_download/bili/我才是熊猫大G_267776898/2023-07-07/韩国人掏出烬中单，大G嘴都笑歪了，12分钟直接推门牙，对面人都傻了！_P01_中文（自动生成）.srt'
+    srt_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/这样的底道也不好跑啊，太费人了，比跑两天的高速还累!.srt'
+    video_output_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/a_subtitle.mp4'
     # get_audio_file(video_file,audio_file)
     # segments = audio_to_text(audio_file)
     # print(segments)
     # audio_to_text_whisper(audio_file)
     # audio_to_text_google_api(audio_file)
     #构建字幕文件
-    segments = file_to_subtitles(origin_srt_file)
-    segments_en = ch_translate_to_en(segments)
-    create_srt_file(segments_en,srt_file)
+    # segments = file_to_subtitles(origin_srt_file)
+    # segments_en = ch_translate_to_en(segments)
+    # create_srt_file(segments_en,srt_file)
     
     # add_subtitle_in_video(video_file,srt_file,video_output_file)
+    
+    # 利用whisper 生成 英文視頻
+    get_audio_file(video_file,audio_file)
+    segments = audio_to_text_by_fastwhisper(audio_file)
+    # segments_en = ch_translate_to_en(segments)
+    # create_srt_file(segments_en,srt_file)
+    # add_subtitle_in_video(video_file,srt_file,video_output_file)
+    

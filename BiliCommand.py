@@ -35,7 +35,6 @@ configModel = {
     "video_quality": 120,
     "cookie": None,
     "cookie2": None,
-    "cookie3": None,
     "danmaku": False,
     "config_name":"bili",
     "subpath_template":"{username}\/{pubdate}\/{name}",
@@ -86,7 +85,7 @@ def argument():
 
 def yamlConfig(config_name):
     curPath = os.path.dirname(os.path.realpath(sys.argv[0]))
-    yamlPath = os.path.join(curPath, config_name+"_config.yml")
+    yamlPath = os.path.join(curPath, 'config',config_name+"_config.yml")
     print(yamlPath)
     f = open(yamlPath, 'r', encoding='utf-8')
     cfg = f.read()
@@ -147,11 +146,7 @@ def yamlConfig(config_name):
             configModel["cookie2"] = configDict["cookie2"]
     except Exception as e:
         print("[  警告  ]:cookie2未设置, 使用默认值5...\r\n")
-    try:
-        if configDict["cookie3"] != None:
-            configModel["cookie3"] = configDict["cookie3"]
-    except Exception as e:
-        print("[  警告  ]:cookie3未设置, 使用默认值5...\r\n")
+    
    
 def build_bili_download_command(link,path,n,q,output_format,tp,cookie,danmuku,beginday,endday):
         #yutto --batch https://space.bilibili.com/314480501 -n 1 -q 120 --output-format mp4 -d /root/video_download/bili -c 25ae6104%2C1703209865%2Ceff30%2A61T12ccqWBkcccaWqYaWMTRi5uWeD-TYCas46A5sbfdsgQsZVe02TUjmrheRO_kAjLL22EbQAAKQA --no-danmaku -tp {username}_{owner_uid}/{pubdate}/{name} --batch-filter-start-time 2023-06-21 --batch-filter-end-time 2023-06-28
@@ -213,7 +208,7 @@ def main():
 
     num_len = len(configModel["link"])
     
-    for i in tqdm.tqdm(range(0, num_len, 3)):
+    for i in tqdm.tqdm(range(0, num_len, 2)):
         print("--------------------------------------------------------------------------------")
         link1 = configModel["link"][i]
         print("[  提示  ]:正在BILI请求的链接: " + link1 + "\r\n")
@@ -222,12 +217,6 @@ def main():
             time.sleep(10)
             result = build_bili_download_command(link2,configModel["path"], configModel["num_works"],configModel["video_quality"],
                                     configModel["output_format"],configModel["subpath_template"],configModel["cookie2"],configModel["danmaku"],
-                                    configModel['begin'],configModel['end'])
-        if i+2 <= (num_len - 1):
-            link3 = configModel["link"][i+2]
-            time.sleep(10)
-            result = build_bili_download_command(link3,configModel["path"], configModel["num_works"],configModel["video_quality"],
-                                    configModel["output_format"],configModel["subpath_template"],configModel["cookie3"],configModel["danmaku"],
                                     configModel['begin'],configModel['end'])
         if result :
             print("link 链接download success ~~~",link1)

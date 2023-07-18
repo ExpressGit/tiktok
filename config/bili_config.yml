@@ -97,21 +97,24 @@ path: /root/video_download/bili
 num_works: 1
 
 #指定视频清晰度等级 可选值 127 | 126 | 125 | 120 | 116 | 112 | 80 | 74 | 64 | 32 | 16
-video_quality: 126
+video_quality: 127
 
 #指定输出格式 可选值 "infer" | "mp4" | "mkv" | "mov"
 output_format: mp4
 
 #Cookies 设置 设置 Cookies 后你才可以下载更高清晰度以及更多的剧集，当你传入你的大会员 SESSDATA 时（当然前提是你是大会员），你就可以下载大会员可访问的资源咯
 # cookie
-cookie: 37c0cc9e%2C1704208306%2C7e77f%2A71R7mz7QzXX4a7cFrTmwZg7NlAqyHNmUKMIqgLkaY1hwF-6poTIz1p7eOiOGX6h8Z7YonR6AAAKQA
+cookie: 606a0dc1%2C1705068028%2Cd5fce%2A71sqrkByXg_4EI3mTFlG_qz9iGg1xVWFzB8Hqrojmnb-3Dugy3mbXt4Bg73IG1l6lkMN_sBwAAKQA
 #文
 cookie2: 1267441a%2C1698605684%2Cf9220%2A52
-#勤
-cookie3: 373bebde%2C1703772306%2C65fbb%2A72qwqCIrIXpkwlZKbr7H01ujMC8O-BCXLV9kT2ZNiLkNwjVd2XHMn_B4proslgGsgXG0I5YgAAPQA
 
 #是否下载弹幕 默认false
 danmaku: False
 
 # 存放子路径模板
 subpath_template: \{username\}_\{owner_uid\}/\{pubdate\}/\{name\}
+
+#临时下载的视频保存位置
+temp_dir : /root/video_download/temp_video
+
+address_ip: 43.159.41.149

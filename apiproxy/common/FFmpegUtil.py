@@ -60,7 +60,20 @@ class FFmpeg(object):
             return True
         else:
             return False
-        
+    
+    def get_audio_file(self,deposit=None):
+        """
+        get video audio file
+        ffmpeg -i 卸完货，就直接放空去南庄看瓷砖了，出来这么久终于到了。.mp4 -f wav -ar 16000 a.wav
+        """
+        if os.path.exists(deposit):
+            os.remove(deposit)
+        strcmd = 'ffmpeg -i {} -f wav -ar 16000 {}'.format(
+            self.editvdo,deposit)
+        print("get_audio_file : {}".format(strcmd))
+        result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
+        return result
+    
     def remove_45_bili_logo(self,video_width,video_height,logo_position,deposit=None):
         """
         去除bili水印(4:5视频)
@@ -100,6 +113,7 @@ class FFmpeg(object):
        
         print("remove_45_bili_logo {} strcmd: {}".format(video_width,strcmd))
         result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
+        return result
 
     def remove_169_bili_logo(self,video_width,video_height,logo_position,deposit=None):
         """
@@ -146,6 +160,7 @@ class FFmpeg(object):
 
         print("remove_169_bili_logo {} strcmd: {}".format(video_width,strcmd))
         result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
+        return result
     
     def edit_metadata(self,deposit=None):
         """

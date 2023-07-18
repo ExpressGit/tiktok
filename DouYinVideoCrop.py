@@ -45,10 +45,11 @@ class DouYinVideoCrop(object):
             video_title = video_titles[1]
             print(video_title)
             video_util.adjust_video_crop(video_file,video_title)
+            video_util.clear_video(video_file)
         print("本次 抖音视频 均已处理完成~~~~")
         # 清理冗余视频
-        for video_file in tqdm(video_list):
-            video_util.clear_video(video_file)
+        # for video_file in tqdm(video_list):
+        #     video_util.clear_video(video_file)
 
 
 if __name__ == '__main__':

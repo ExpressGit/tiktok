@@ -184,6 +184,10 @@ button:hover {
     text-align: center
 }
 
+.title-video-text{
+    text-align: left;
+}
+
 .errors-16-mid {
     max-width: 600px;
     margin: 0 auto;

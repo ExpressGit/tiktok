@@ -552,8 +552,20 @@ python -m pip install --upgrade pip
 
 ```
 
-# 启动命令
+### 启动命令
 ```
-python3 DouYinCommand.py -C False --config beauty
+nohup bash /root/workspace/tiktok/download_corp_video.sh 1 > /root/workspace/logs/video-$(date +"%Y-%m-%d").log 2>&1 &
+
+```
+
+### 启动解析web
+```
+nohup python3 /root/workspace/tiktok/WebApi.py -p 5600 &
+
+```
+
+### playwright centos install guide
+```
+https://github.com/kumaraditya303/playwright-centos/blob/master/Dockerfile
 
 ```

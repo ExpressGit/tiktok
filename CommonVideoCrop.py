@@ -103,8 +103,8 @@ class CommonVideoCrop(object):
          # 新增黑底封面
         black_bg_path = 'img/black_bg.png'
         title_en = self.translate_text(video_title,'en')
-        video_png_clip,cover_png_path = self.vd.generate_black_mask_cover(video_end_clip,video_path,title_en,('center'),black_bg_path)
-        # video_png_clip,cover_png_path = self.vd.generate_mask_cover(video_end_clip,video_path,video_title=title_en,postion=('center','top'))
+        # video_png_clip,cover_png_path = self.vd.generate_black_mask_cover(video_end_clip,video_path,title_en,('center'),black_bg_path)
+        video_png_clip,cover_png_path = self.vd.generate_mask_cover(video_end_clip,video_path,video_title=title_en,postion=('center','top'))
         edit_video_path = os.path.join(dir_path,video_title+'_edit.mp4')
         video_end_clip.write_videofile(edit_video_path,fps=24)
         new_cover_png_path = cover_png_path.replace("video_download","video_deliver")

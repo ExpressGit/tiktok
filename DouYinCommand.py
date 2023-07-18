@@ -32,7 +32,7 @@ from apiproxy.common import utils
 configModel = {
     "link": [],
     "path": os.getcwd(),
-    "config":'config',
+    "config":'douyin',
     "music": True,
     "cover": True,
     "avatar": True,
@@ -119,7 +119,7 @@ def argument():
 
 def yamlConfig(config_name):
     curPath = os.path.dirname(os.path.realpath(sys.argv[0]))
-    yamlPath = os.path.join(curPath, config_name+"_config.yml")
+    yamlPath = os.path.join(curPath,'config', config_name+"_config.yml")
     print(yamlPath)
     f = open(yamlPath, 'r', encoding='utf-8')
     cfg = f.read()

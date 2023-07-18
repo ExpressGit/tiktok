@@ -5,17 +5,21 @@ tqdm==4.65.0
 PyYAML==6.0
 scipy
 moviepy
-whisper
 translate
-audosub
-#googletrans
 pygoogletranslation
 googletrans==4.0.0-rc1
 torch==2.0.0
 torchaudio==2.0.0 
 torchvision
 Pillow
-git+https://github.com/m-bain/whisperx.git
-uninstall opencv-python
-opencv-python-headless
-SpeechRecognition
+faster_whisper
+yt-dlp
+aiohttp
+aiofiles
+tiktokapipy  #https://github.com/Russell-Newton/TikTokPy
+playwright==1.29.1
+playwright-stealth==1.0.5
+pyee==9.0.4
+#python3 -m playwright install
+# 安装 chrome 依赖 https://blog.csdn.net/wgPython/article/details/102519342
+

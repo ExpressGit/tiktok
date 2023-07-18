@@ -6,6 +6,7 @@ function SendAjax() {
         type: 'POST',
         url: "/douyin",
         data: data,
+        timeout : 600000,
         dataType: 'json',
         beforeSend: function () {
             $("#loading").attr("style", "display:block;");//在请求后台数据之前显示loading图标
