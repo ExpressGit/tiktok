@@ -5,9 +5,7 @@ tqdm==4.65.0
 PyYAML==6.0
 scipy
 moviepy
-translate
-pygoogletranslation
-googletrans==4.0.0-rc1
+translatepy
 torch==2.0.0
 torchaudio==2.0.0 
 torchvision

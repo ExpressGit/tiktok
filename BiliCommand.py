@@ -23,9 +23,11 @@ import sys,datetime
 import json
 import yaml,tqdm
 import time
-
+import asyncio
 from apiproxy.common import utils
+from apiproxy.common.BiliVideo import BiliVideo
 import subprocess
+from random import choice
 
 configModel = {
     "link": [],
@@ -76,8 +78,8 @@ def argument():
                         type=str, required=False, default="")
     parser.add_argument("--path", "-p", help="视频下载根目录",
                         type=str, required=False, default="/root/video_download/bili")
-    parser.add_argument("--cookie", "-c",help="设置cookie, 格式: \"name1=value1; name2=value2;\" 注意要加冒号",
-                        type=str, required=False, default='')
+    parser.add_argument("--cookies", "-c",help="cookies, 格式: \"name1=value1; name2=value2;\" 注意要加冒号",
+                        type=str, required=False,default=[], action="append")
     args = parser.parse_args()
 
     return args
@@ -137,35 +139,11 @@ def yamlConfig(config_name):
     except Exception as e:
         print("[  警告  ]:subpath_template, 使用默认值...\r\n")
     try:
-        if configDict["cookie"] != None:
-            configModel["cookie"] = configDict["cookie"]
+        if configDict["cookies"] != None:
+            configModel["cookies"] = configDict["cookies"]
     except Exception as e:
-        print("[  警告  ]:cookie未设置, 使用默认值5...\r\n")
-    try:
-        if configDict["cookie2"] != None:
-            configModel["cookie2"] = configDict["cookie2"]
-    except Exception as e:
-        print("[  警告  ]:cookie2未设置, 使用默认值5...\r\n")
-    
+        print("[  警告  ]:cookies, 使用默认值5...\r\n")
    
-def build_bili_download_command(link,path,n,q,output_format,tp,cookie,danmuku,beginday,endday):
-        #yutto --batch https://space.bilibili.com/314480501 -n 1 -q 120 --output-format mp4 -d /root/video_download/bili -c 25ae6104%2C1703209865%2Ceff30%2A61T12ccqWBkcccaWqYaWMTRi5uWeD-TYCas46A5sbfdsgQsZVe02TUjmrheRO_kAjLL22EbQAAKQA --no-danmaku -tp {username}_{owner_uid}/{pubdate}/{name} --batch-filter-start-time 2023-06-21 --batch-filter-end-time 2023-06-28
-        """
-        添加视频字幕
-        :param deposit:添加字幕后另存为路径，为空则覆盖
-        :return: True/False
-        """
-        
-        strcmd = r'yutto --batch "{}" -n {} -q {} --output-format "{}" '\
-                 r' -d "{}" -c "{}" --no-danmaku -tp "{}" '\
-                 r' --batch-filter-start-time "{}" --batch-filter-end-time "{}"'.format(
-                    link, n,q,output_format,path,cookie,tp.replace("\\",""),beginday,endday)
-        print(strcmd)
-        result = subprocess.run(args=strcmd, stdout=subprocess.PIPE, shell=True)
-        if not result:
-            print("link downlaod video failed:",link)
-        return True
-
 def main():
     start = time.time()  # 开始时间
 
@@ -189,7 +167,7 @@ def main():
 
     if configModel["link"] == []:
         return
-    
+    print(configModel["subpath_template"])
     now = datetime.datetime.now()
     now_str = now.strftime('%Y-%m-%d')
     delta = datetime.timedelta(days=-1)
@@ -206,22 +184,24 @@ def main():
     if not os.path.exists(configModel["path"]):
         os.mkdir(configModel["path"])
 
-    num_len = len(configModel["link"])
-    
-    for i in tqdm.tqdm(range(0, num_len, 2)):
-        print("--------------------------------------------------------------------------------")
-        link1 = configModel["link"][i]
-        print("[  提示  ]:正在BILI请求的链接: " + link1 + "\r\n")
-        if i+1 <= (num_len - 1 ):
-            link2 = configModel["link"][i+1]
-            time.sleep(10)
-            result = build_bili_download_command(link2,configModel["path"], configModel["num_works"],configModel["video_quality"],
-                                    configModel["output_format"],configModel["subpath_template"],configModel["cookie2"],configModel["danmaku"],
-                                    configModel['begin'],configModel['end'])
-        if result :
-            print("link 链接download success ~~~",link1)
-        # 每次下载一个 暂定 12min
-        time.sleep(int(configModel["sleep"])*60)    
+    bili = BiliVideo()
+    # result = asyncio.run(bili.download_up_videos(configs['link'],cookie,date_str,save_path))
+    result = asyncio.run(bili.download_up_videos(configModel['link'],configModel['cookies'],
+                                                 yestoday_str,configModel["path"],configModel['video_quality'],configModel['danmaku']))
+    # for i in tqdm.tqdm(range(0, num_len, 2)):
+    #     print("--------------------------------------------------------------------------------")
+    #     link1 = configModel["link"][i]
+    #     print("[  提示  ]:正在BILI请求的链接: " + link1 + "\r\n")
+    #     if i+1 <= (num_len - 1 ):
+    #         link2 = configModel["link"][i+1]
+    #         time.sleep(10)
+    #         result = build_bili_download_command(link2,configModel["path"], configModel["num_works"],configModel["video_quality"],
+    #                                 configModel["output_format"],configModel["subpath_template"],configModel["cookie2"],configModel["danmaku"],
+    #                                 configModel['begin'],configModel['end'])
+    #     if result :
+    #         print("link 链接download success ~~~",link1)
+    #     # 每次下载一个 暂定 12min
+    #     time.sleep(int(configModel["sleep"])*60)
     end = time.time()  # 结束时间
     print('\n' + '[下载完成]:总耗时: %d分钟%d秒\n' % (int((end - start) / 60), ((end - start) % 60)))  # 输出下载用时时间
 

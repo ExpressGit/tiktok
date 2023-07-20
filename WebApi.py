@@ -20,8 +20,9 @@ from apiproxy.douyin.douyinapi import DouyinApi
 from apiproxy.douyin import douyin_headers
 import argparse
 from apiproxy.common.YoutuberVideo import YoutuberVideo
+from apiproxy.common.BiliVideo import BiliVideo
 import re
-
+import asyncio
 
 def douyinwork(share_link, max_cursor, mode, cookie):
     dy = DouyinApi()
@@ -70,8 +71,9 @@ def youtubework(share_link):
     return result
 
 def biliwork(share_link):
-    
-    pass
+    bili = BiliVideo()
+    result = asyncio.run(bili.download_single_video(share_link))
+    return result
 
 def tiktok(share_link):
     

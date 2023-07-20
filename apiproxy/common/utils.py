@@ -233,5 +233,14 @@ class Utils(object):
         configDict = yaml.load(stream=cfg, Loader=yaml.FullLoader)
         return configDict
     
+    def get_date_timestamp(self,date_str):
+        begin_day = date_str
+        date_format = "%Y-%m-%d"    # 日期格式
+         # 将日期字符串转换为struct_time对象
+        struct_time = time.strptime(begin_day, date_format)
+        # 将struct_time对象转换为时间戳
+        begin_timestamp = time.mktime(struct_time)
+        return begin_timestamp
+    
 if __name__ == "__main__":
     pass

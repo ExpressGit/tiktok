@@ -115,7 +115,7 @@ if __name__ == '__main__':
         date_str = sys.argv[1]
     print(" 本次 bili 视频 处理 日期:%s" % date_str)
     
-    # date_str = '2023-06-30'
+    # date_str = '2023-07-19'
     
     bili_crop = BiliVideoCrop()
     video_list,srt_list,video_logo_dict = bili_crop.get_all_video_list(date_str)

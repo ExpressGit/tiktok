@@ -556,6 +556,8 @@ python -m pip install --upgrade pip
 ```
 nohup bash /root/workspace/tiktok/download_corp_video.sh 1 > /root/workspace/logs/video-$(date +"%Y-%m-%d").log 2>&1 &
 
+nohup bash /root/workspace/tiktok/download_corp_video.sh 1 > /root/workspace/logs/video-$(date +"\%Y-\%m-\%d").log 2>&1 &
+
 ```
 
 ### 启动解析web

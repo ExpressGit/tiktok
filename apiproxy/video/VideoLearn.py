@@ -5,114 +5,128 @@ import random,io,glob,os
 import string
 import warnings
 import asyncio
+import aiohttp,aiofiles
 from tiktokapipy import TikTokAPIWarning
 warnings.filterwarnings("ignore", category=TikTokAPIWarning)
-from tiktokapipy.api import TikTokAPI
-import aiohttp,aiofiles
-from tiktokapipy.async_api import AsyncTikTokAPI
-from tiktokapipy.models.video import Video
+# from tiktokapipy.api import TikTokAPI
+# from tiktokapipy.async_api import AsyncTikTokAPI
+# from tiktokapipy.models.video import Video
 import urllib.request
 from os import path
 import requests
+from bilix.sites.bilibili import DownloaderBilibili
 
 directory='/root/video_download/tiktok'
 
 
-async def save_video(video: Video, api: AsyncTikTokAPI):
-    origin_cookies = await api.context.cookies()
-    print(origin_cookies)
-    cookies = {
-        "msToken" : "YtYL2oW2KqUGtFqiObQ3Ljtpej0f1X4U7_WYo3_eYB2q5plplnTrsBGYYohRp7qfCwDTL1fL01j_wpjL5OcGADCl3ruYxyapGPNrm41JXlyXvzju1pyzRcnlBgKVLVpOwO2dlYNlhFiN0ymvgA==",
-        "tt_chain_token" : "1KTDxti9qQ1zO4fJ6MJzig==",
-        "sessionid" : "cca9cf0838caddddc18fa615682a4456",
-        "tt_webid" : "6913027209393473025",
-        "sid_guard" : "cca9cf0838caddddc18fa615682a4456%7C1686717917%7C15552000%7CMon%2C+11-Dec-2023+04%3A45%3A17+GMT",
-        "tt_csrf_token" : "08nUDmVt-TA5q2CMHZpriC0wxpUwGIQ0gCk0",
-        "ttwid" : "1%7CGMpPsH8-2YJhpqARFG7NzdLJnrPQZL7mSuxSxRMV_Ns%7C1689642137%7Ca795d7610f314797c3a4b4cb1e9658a0a19b3d8d7249aa1afcb4a7dd686d287f"
-    }
-    headers = {
-        'Host': 't.tiktok.com',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:79.0) Gecko/20100101 Firefox/79.0',
-        'Referer': 'https://www.tiktok.com/',
-        'Origin' : 'https://www.tiktok.com',
-        'Cookie': cookies,
-        "region": 'JP',
-        "tt-web-region": 'JP',
-        "language": 'zh-CN',
-        "verifyFp": "verify_kjf974fd_y7bupmR0_3uRm_43kF_Awde_8K95qt0GcpBk"
-    }
-    async with aiohttp.ClientSession(cookies=cookies) as session:
-    # Creating this header tricks TikTok into thinking it made the request itself
-      async with session.get(video.video.play_addr, headers=headers) as resp:
-        print(video.desc)
-        return await resp.read()
+# async def save_video(video: Video, api: AsyncTikTokAPI):
+#     origin_cookies = await api.context.cookies()
+#     print(origin_cookies)
+#     cookies = {
+#         "msToken" : "YtYL2oW2KqUGtFqiObQ3Ljtpej0f1X4U7_WYo3_eYB2q5plplnTrsBGYYohRp7qfCwDTL1fL01j_wpjL5OcGADCl3ruYxyapGPNrm41JXlyXvzju1pyzRcnlBgKVLVpOwO2dlYNlhFiN0ymvgA==",
+#         "tt_chain_token" : "1KTDxti9qQ1zO4fJ6MJzig==",
+#         "sessionid" : "cca9cf0838caddddc18fa615682a4456",
+#         "tt_webid" : "6913027209393473025",
+#         "sid_guard" : "cca9cf0838caddddc18fa615682a4456%7C1686717917%7C15552000%7CMon%2C+11-Dec-2023+04%3A45%3A17+GMT",
+#         "tt_csrf_token" : "08nUDmVt-TA5q2CMHZpriC0wxpUwGIQ0gCk0",
+#         "ttwid" : "1%7CGMpPsH8-2YJhpqARFG7NzdLJnrPQZL7mSuxSxRMV_Ns%7C1689642137%7Ca795d7610f314797c3a4b4cb1e9658a0a19b3d8d7249aa1afcb4a7dd686d287f"
+#     }
+#     headers = {
+#         'Host': 't.tiktok.com',
+#         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:79.0) Gecko/20100101 Firefox/79.0',
+#         'Referer': 'https://www.tiktok.com/',
+#         'Origin' : 'https://www.tiktok.com',
+#         'Cookie': cookies,
+#         "region": 'JP',
+#         "tt-web-region": 'JP',
+#         "language": 'zh-CN',
+#         "verifyFp": "verify_kjf974fd_y7bupmR0_3uRm_43kF_Awde_8K95qt0GcpBk"
+#     }
+#     async with aiohttp.ClientSession(cookies=cookies) as session:
+#     # Creating this header tricks TikTok into thinking it made the request itself
+#       async with session.get(video.video.play_addr, headers=headers) as resp:
+#         print(video.desc)
+#         return await resp.read()
 
-async def save_slideshow(video: Video):
-    # this filter makes sure the images are padded to all the same size
-    vf = "\"scale=iw*min(1080/iw\,1920/ih):ih*min(1080/iw\,1920/ih)," \
-         "pad=1080:1920:(1080-iw)/2:(1920-ih)/2," \
-         "format=yuv420p\""
+# async def save_slideshow(video: Video):
+#     # this filter makes sure the images are padded to all the same size
+#     vf = "\"scale=iw*min(1080/iw\,1920/ih):ih*min(1080/iw\,1920/ih)," \
+#          "pad=1080:1920:(1080-iw)/2:(1920-ih)/2," \
+#          "format=yuv420p\""
 
-    for i, image_data in enumerate(video.image_post.images):
-        url = image_data.image_url.url_list[-1]
-        # this step could probably be done with asyncio, but I didn't want to figure out how
-        urllib.request.urlretrieve(url, path.join(directory, f"temp_{video.id}_{i:02}.jpg"))
+#     for i, image_data in enumerate(video.image_post.images):
+#         url = image_data.image_url.url_list[-1]
+#         # this step could probably be done with asyncio, but I didn't want to figure out how
+#         urllib.request.urlretrieve(url, path.join(directory, f"temp_{video.id}_{i:02}.jpg"))
 
-    urllib.request.urlretrieve(video.music.play_url, path.join(directory, f"temp_{video.id}.mp3"))
+#     urllib.request.urlretrieve(video.music.play_url, path.join(directory, f"temp_{video.id}.mp3"))
 
-    # use ffmpeg to join the images and audio
-    command = [
-        "ffmpeg",
-        "-r 2/5",
-        f"-i {directory}/temp_{video.id}_%02d.jpg",
-        f"-i {directory}/temp_{video.id}.mp3",
-        "-r 30",
-        f"-vf {vf}",
-        "-acodec copy",
-        f"-t {len(video.image_post.images) * 2.5}",
-        f"{directory}/temp_{video.id}.mp4",
-        "-y"
-    ]
-    ffmpeg_proc = await asyncio.create_subprocess_shell(
-        " ".join(command),
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    _, stderr = await ffmpeg_proc.communicate()
-    generated_files = glob.glob(path.join(directory, f"temp_{video.id}*"))
+#     # use ffmpeg to join the images and audio
+#     command = [
+#         "ffmpeg",
+#         "-r 2/5",
+#         f"-i {directory}/temp_{video.id}_%02d.jpg",
+#         f"-i {directory}/temp_{video.id}.mp3",
+#         "-r 30",
+#         f"-vf {vf}",
+#         "-acodec copy",
+#         f"-t {len(video.image_post.images) * 2.5}",
+#         f"{directory}/temp_{video.id}.mp4",
+#         "-y"
+#     ]
+#     ffmpeg_proc = await asyncio.create_subprocess_shell(
+#         " ".join(command),
+#         stdout=asyncio.subprocess.PIPE,
+#         stderr=asyncio.subprocess.PIPE,
+#     )
+#     _, stderr = await ffmpeg_proc.communicate()
+#     generated_files = glob.glob(path.join(directory, f"temp_{video.id}*"))
 
-    if not path.exists(path.join(directory, f"temp_{video.id}.mp4")):
-        # optional ffmpeg logging step
-        # logging.error(stderr.decode("utf-8"))
-        for file in generated_files:
-            os.remove(file)
-        raise Exception("Something went wrong with piecing the slideshow together")
+#     if not path.exists(path.join(directory, f"temp_{video.id}.mp4")):
+#         # optional ffmpeg logging step
+#         # logging.error(stderr.decode("utf-8"))
+#         for file in generated_files:
+#             os.remove(file)
+#         raise Exception("Something went wrong with piecing the slideshow together")
 
-    with open(path.join(directory, f"temp_{video.id}.mp4"), "rb") as f:
-        ret = io.BytesIO(f.read())
+#     with open(path.join(directory, f"temp_{video.id}.mp4"), "rb") as f:
+#         ret = io.BytesIO(f.read())
 
-    for file in generated_files:
-        os.remove(file)
+#     for file in generated_files:
+#         os.remove(file)
 
-    return ret
+#     return ret
 
 
-async def get_tiktok_trend_video():
-    async with AsyncTikTokAPI() as api:
-        user = await api.user("odapolf", video_limit=10)
-        async for video in user.videos:
-            print(video)
-            num_comments = video.stats.comment_count
-            num_likes = video.stats.digg_count
-            num_views = video.stats.play_count
-            num_shares = video.stats.share_count
-            video_bytes  = await save_video(video,api)
-            print("video_bytes:" + video_bytes.decode())
-            file_path = os.path.join(directory,'{}.mp4'.format(video.desc))
-            print(file_path)
-            async with aiofiles.open(file_path, 'wb') as file:
-                    await file.write(video_bytes)
-        return "OK"
+# async def get_tiktok_trend_video():
+#     async with AsyncTikTokAPI() as api:
+#         user = await api.user("odapolf", video_limit=10)
+#         async for video in user.videos:
+#             print(video)
+#             num_comments = video.stats.comment_count
+#             num_likes = video.stats.digg_count
+#             num_views = video.stats.play_count
+#             num_shares = video.stats.share_count
+#             video_bytes  = await save_video(video,api)
+#             print("video_bytes:" + video_bytes.decode())
+#             file_path = os.path.join(directory,'{}.mp4'.format(video.desc))
+#             print(file_path)
+#             async with aiofiles.open(file_path, 'wb') as file:
+#                     await file.write(video_bytes)
+#         return "OK"
+
+
+
+
+async def bilidonwload():
+    # 你可以使用async with上下文管理器来开启和关闭一个下载器
+    async with DownloaderBilibili(sess_data='1267441a%2C1698605684%2Cf9220%2A52') as d:
+        # 然后用await异步等待下载完成
+        await d.get_series("https://www.bilibili.com/video/BV1jK4y1N7ST")
+
+
+
+
 
 
 def get_video_basic_info(video_path):
@@ -251,10 +265,10 @@ if __name__ == '__main__':
     # clip.write_videofile(new_video_path,fps=30)
 
     #tiktok
-    loop=asyncio.get_event_loop()
-    results = loop.run_until_complete(get_tiktok_trend_video())
-    loop.close()
-    print(results)
+    # loop=asyncio.get_event_loop()
+    # results = loop.run_until_complete(get_tiktok_trend_video())
+    # loop.close()
+    # print(results)
     # get_tiktok_trend_video()
-    
+    asyncio.run(bilidonwload())
     

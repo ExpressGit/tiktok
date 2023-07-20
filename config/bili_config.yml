@@ -27,9 +27,7 @@ link:
   - https://space.bilibili.com/596842980
   - https://space.bilibili.com/71573495
   - https://space.bilibili.com/279180568
-  - https://space.bilibili.com/7370030
   - https://space.bilibili.com/110371677
-  - https://space.bilibili.com/7370030
   - https://space.bilibili.com/392836434
   - https://space.bilibili.com/33099876
   - https://space.bilibili.com/304498060
@@ -68,8 +66,6 @@ logops:
   - righttop
   - righttop
   - righttop
-  - empty
-  - empty
   - righttop
   - empty
   - righttop
@@ -96,17 +92,17 @@ path: /root/video_download/bili
 #最大并行 worker 数量
 num_works: 1
 
-#指定视频清晰度等级 可选值 127 | 126 | 125 | 120 | 116 | 112 | 80 | 74 | 64 | 32 | 16
-video_quality: 127
+#指定视频清晰度等级 可选值 0（最高4K） | 1（2K）
+video_quality: 1
 
 #指定输出格式 可选值 "infer" | "mp4" | "mkv" | "mov"
 output_format: mp4
 
 #Cookies 设置 设置 Cookies 后你才可以下载更高清晰度以及更多的剧集，当你传入你的大会员 SESSDATA 时（当然前提是你是大会员），你就可以下载大会员可访问的资源咯
 # cookie
-cookie: 606a0dc1%2C1705068028%2Cd5fce%2A71sqrkByXg_4EI3mTFlG_qz9iGg1xVWFzB8Hqrojmnb-3Dugy3mbXt4Bg73IG1l6lkMN_sBwAAKQA
-#文
-cookie2: 1267441a%2C1698605684%2Cf9220%2A52
+cookies: 
+  - 3d6504f9%2C1705201271%2C394f8%2A71Neglo5qCq6mYWqesCxPu-8qDz5nOvM2Xbqs4RyHFhgjVbk8PYImbkfiweIS9QJVmFWwHsQAAKQA
+  - 1267441a%2C1698605684%2Cf9220%2A52
 
 #是否下载弹幕 默认false
 danmaku: False
