@@ -9,12 +9,11 @@ import aiohttp,aiofiles
 from tiktokapipy import TikTokAPIWarning
 warnings.filterwarnings("ignore", category=TikTokAPIWarning)
 # from tiktokapipy.api import TikTokAPI
-# from tiktokapipy.async_api import AsyncTikTokAPI
-# from tiktokapipy.models.video import Video
+from tiktokapipy.async_api import AsyncTikTokAPI
+from tiktokapipy.models.video import Video
 import urllib.request
 from os import path
 import requests
-from bilix.sites.bilibili import DownloaderBilibili
 
 directory='/root/video_download/tiktok'
 
@@ -97,32 +96,30 @@ directory='/root/video_download/tiktok'
 
 #     return ret
 
-
-# async def get_tiktok_trend_video():
-#     async with AsyncTikTokAPI() as api:
-#         user = await api.user("odapolf", video_limit=10)
-#         async for video in user.videos:
-#             print(video)
-#             num_comments = video.stats.comment_count
-#             num_likes = video.stats.digg_count
-#             num_views = video.stats.play_count
-#             num_shares = video.stats.share_count
-#             video_bytes  = await save_video(video,api)
-#             print("video_bytes:" + video_bytes.decode())
-#             file_path = os.path.join(directory,'{}.mp4'.format(video.desc))
-#             print(file_path)
-#             async with aiofiles.open(file_path, 'wb') as file:
-#                     await file.write(video_bytes)
-#         return "OK"
+async def save_video(video: Video,api: AsyncTikTokAPI):
+     async with aiohttp.ClientSession(cookies={cookie["name"]: cookie["value"] for cookie in await api.context.cookies() if cookie["name"] == "tt_chain_token"}) as session:
+        # Creating this header tricks TikTok into thinking it made the request itself
+        async with session.get(video.video.download_addr, headers={"referer": "https://www.tiktok.com/"}) as resp:
+            return await resp.read()
 
 
+async def get_tiktok_trend_video():
+    async with AsyncTikTokAPI() as api:
+        user = await api.user("odapolf", video_limit=10)
+        async for video in user.videos:
+            print(video)
+            num_comments = video.stats.comment_count
+            num_likes = video.stats.digg_count
+            num_views = video.stats.play_count
+            num_shares = video.stats.share_count
+            video_bytes  = await save_video(video,api)
+            print("video_bytes:" + video_bytes.decode())
+            file_path = os.path.join(directory,'{}.mp4'.format(video.desc))
+            print(file_path)
+            async with aiofiles.open(file_path, 'wb') as file:
+                    await file.write(video_bytes)
+        return "OK"
 
-
-async def bilidonwload():
-    # 你可以使用async with上下文管理器来开启和关闭一个下载器
-    async with DownloaderBilibili(sess_data='1267441a%2C1698605684%2Cf9220%2A52') as d:
-        # 然后用await异步等待下载完成
-        await d.get_series("https://www.bilibili.com/video/BV1jK4y1N7ST")
 
 
 
@@ -265,10 +262,7 @@ if __name__ == '__main__':
     # clip.write_videofile(new_video_path,fps=30)
 
     #tiktok
-    # loop=asyncio.get_event_loop()
-    # results = loop.run_until_complete(get_tiktok_trend_video())
-    # loop.close()
-    # print(results)
-    # get_tiktok_trend_video()
-    asyncio.run(bilidonwload())
+    result =  asyncio.run(get_tiktok_trend_video())
+    print(result)
+   
     

@@ -138,8 +138,8 @@ class BiliVideo(object):
     async def download_single_video(self,url):
         
         bili = self.get_bili_config()
-        cookie = bili['cookie']
-        api.dft_client_settings['cookies']={"SESSDATA":cookie}
+        cookies = bili['cookies']
+        api.dft_client_settings['cookies']={"SESSDATA":choice(cookies)}
         client = AsyncClient(**api.dft_client_settings)
         video_info = await api.get_video_info(client, url)
         # up_info = await api.get_up_info(client,video_info.up_info.mid)
