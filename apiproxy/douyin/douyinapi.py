@@ -27,6 +27,7 @@ from apiproxy.douyin import douyin_headers
 from apiproxy.douyin.urls import Urls
 from apiproxy.douyin.result import Result
 from apiproxy.common import utils
+from apiproxy.common.TranslateUtil import translate_text
 
 class DouyinApi(object):
     def __init__(self):

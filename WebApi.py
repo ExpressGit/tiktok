@@ -21,8 +21,10 @@ from apiproxy.douyin import douyin_headers
 import argparse
 from apiproxy.common.YoutuberVideo import YoutuberVideo
 from apiproxy.common.BiliVideo import BiliVideo
+from apiproxy.common.InstagramVideo import InstagramVideo
 import re
 import asyncio
+from apiproxy.common.TranslateUtil import translate_text
 
 def douyinwork(share_link, max_cursor, mode, cookie):
     dy = DouyinApi()
@@ -57,7 +59,7 @@ def douyinwork(share_link, max_cursor, mode, cookie):
 
     datadict = {}
 
-
+    data['desc_en'] = translate_text(data['desc'],'en')
     datadict["data"] = data
     datadict["rawdata"] = rawdata
     datadict["cursor"] = cursor
@@ -68,17 +70,25 @@ def douyinwork(share_link, max_cursor, mode, cookie):
 def youtubework(share_link):
     yt = YoutuberVideo()
     result,seriza_info = yt.download_from_embed_single_video(share_link)
+    result['data']['desc_en'] = translate_text(result['data']['desc'],'en')
     return result
 
 def biliwork(share_link):
     bili = BiliVideo()
     result = asyncio.run(bili.download_single_video(share_link))
+    result['data']['desc_en'] = translate_text(result['data']['desc'],'en')
     return result
 
 def tiktok(share_link):
     
     pass
 
+def instagram(share_link):
+    insta = InstagramVideo()
+    result = insta.download_single_instgram_video(share_link)
+    result['data']['desc_en'] = translate_text(result['data']['desc'],'en')
+    return result
+    # https://www.instagram.com
 
 def judge_link_type(url, cursor, mode, cookie):
     """
@@ -97,6 +107,8 @@ def judge_link_type(url, cursor, mode, cookie):
         result = biliwork(url)
     elif re.search(r"(tiktok.com)+",url):
         result = tiktok(url)
+    elif re.search(r"(instagram.com)+",url):
+        result = instagram(url)
     else:
         result=''
     return result

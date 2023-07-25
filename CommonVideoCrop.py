@@ -19,6 +19,7 @@ from apiproxy.common import TranslateUtil
 import shutil
 import re
 from PIL import Image
+from apiproxy.common.SubtitleUtil import *
 
 """
 通用视频处理类
@@ -26,8 +27,10 @@ from PIL import Image
 class CommonVideoCrop(object):
 
     def __init__(self) -> None:
+        self.base_dir = '/root/video_download'
         self.vd = VideoUtil()
-
+        self.vd_read = VideoRead(self.base_dir)
+        
     def get_video_info(self,video_path):
         '''
         获取视频的基础信息
@@ -35,7 +38,7 @@ class CommonVideoCrop(object):
         video_raw_clip,duration,video_width,video_height,fps,audio = self.vd.get_video_basic_info(video_path)
         return video_raw_clip,duration,video_width,video_height,fps,audio
 
-    def write_title_file(self,title,file_path):
+    def write_title_file(self,title,file_path)->None:
         '''
             写入标题文件（覆盖）
         '''
@@ -44,7 +47,7 @@ class CommonVideoCrop(object):
         writers.close() 
         print(" title en 已写入文件 done")
 
-    def remove_bili_logo(self,video_path,logpos):
+    def remove_bili_logo(self,video_path,logpos)->str:
         '''
         去除bili视频水印
         '''
@@ -63,7 +66,7 @@ class CommonVideoCrop(object):
             ffmpegutil.remove_45_bili_logo(video_width,video_height,logpos,new_video_path)
         return new_video_path
 
-    def adjust_video_crop(self,video_path,video_title):
+    def adjust_video_crop(self,video_path,video_title)->None:
         '''
         对视频进行基础处理
         # 1、视频截取
@@ -123,15 +126,16 @@ class CommonVideoCrop(object):
         
         print("{} video deal process done!!".format(video_title))
 
-    def clear_video(self,origin_video_path):
+    def clear_video(self,origin_video_path)->None:
         '''
         中间过程产出的视频清理
         清理多余视频文件，节省空间
         '''
-        dir_path = os.path.dirname(origin_video_path)
-        for file_path, empty_list, file_name_list in os.walk(dir_path):
+        if not os.path.exists(origin_video_path):
+            print("{} 目录不存在~~".format(origin_video_path))
+        for file_path, empty_list, file_name_list in os.walk(origin_video_path):
             for file_name in file_name_list:
-                if re.search('.*?[logo|edit|new|en].mp4',file_name):
+                if re.search('.*?_[logo|edit|new|en]+.[mp4|srt]',file_name):
                     print("delete " + file_name)
                     file = os.path.join(file_path,file_name)
                     if os.path.exists(file):
@@ -139,7 +143,7 @@ class CommonVideoCrop(object):
         print(" 冗余 视频 删除 完成 done")
 
     
-    def delete_folder_by_date(self,del_dir,date):
+    def delete_folder_by_date(self,del_dir,date)->None:
         """
             删除指定文件夹，保留磁盘空间
         """
@@ -156,8 +160,6 @@ class CommonVideoCrop(object):
 
         # 调用函数并传入日期作为参数
         #delete_folder_by_date("2021-01-01")
-    
-    
     
     def add_video_subtitle(self,video_path,srt_file):
         '''
@@ -179,8 +181,9 @@ class CommonVideoCrop(object):
         add_subtitle_in_video(video_path,srt_en_file,output_video_file)
         print(" 视频 添加 英文 字幕 done")
         return output_video_file
-
-    def translate_text(self,text,lang):
+    
+    
+    def translate_text(self,text,lang)->str:
         '''
         description:  实现文本翻译能力
         param {*} text
@@ -190,10 +193,48 @@ class CommonVideoCrop(object):
         trans_text = TranslateUtil.translate_text(text,lang)
         return trans_text
     
+        
+    def add_video_en_subtitle(self,video_file)->str:
+        '''
+        add video file english subtitle
+        '''
+        if not os.path.exists(video_file):
+            print("{} file not found".format(video_file))
+            return ''
+        file_name = os.path.basename(video_file)[:-4]
+        file_base_path = os.path.dirname(video_file)
+        print(file_name)
+        audio_file = os.path.join(file_base_path,file_name+'.mp3')
+        srt_file = os.path.join(file_base_path,file_name+'_en.srt')
+        video_output_file = os.path.join(file_base_path,file_name+'_en.mp4')
+        
+        if os.path.exists(audio_file):
+            os.remove(audio_file)
+        if os.path.exists(srt_file):
+            os.remove(srt_file)
+        if os.path.exists(video_output_file):
+            os.remove(video_output_file)
+        
+        get_audio_file(video_file,audio_file)
+        segments = audio_to_text_by_fastwhisper(audio_file)
+        segments_en = ch_translate_to_en(segments)
+        create_srt_file(segments_en,srt_file)
+        add_subtitle_in_video(video_file,srt_file,video_output_file)
+        # 清理冗余文件
+        if os.path.exists(audio_file):
+            os.remove(audio_file)
+        if os.path.exists(srt_file):
+            os.remove(srt_file)
+        print("~~~~ {} 英文字母添加成功～～～～～".format(video_file))
+        return video_output_file
+    
+    
 if __name__ == '__main__':
-    file_name = '/root/video_download/bili/大山的农村人_1480975816/2023-06-30/好不容易找到一票大货，居然被放鸽子了，好在下午又重新找到一组_logo.mp4'
-    title = '好不容易找到一票大货，居然被放鸽子了，好在下午又重新找到一组'
+    file_name = '/root/video_download/bili/【up】大山的农村人_1480975816/2023-07-07/万事俱备，只欠东风。今天带弟弟去把工具这些跟他备好.mp4'
     commonutil = CommonVideoCrop()
-    commonutil.adjust_video_crop(file_name,title)
-    # commonutil.remove_bili_logo(file_name)
+    # commonutil.adjust_video_crop(file_name,title)
+    # commonutil.remove_bili_logo(file_name,'lefttop')
+    # commonutil.clear_video('/root/video_download/bili')
+    commonutil.add_video_en_subtitle(file_name)
+    
     

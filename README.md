@@ -515,11 +515,6 @@ python DouYinCommand.py -C True -l https://v.douyin.com/SnXMoh2/ -p /path/to/dow
 
 本项目部分思路来自[TikTokDownload](https://github.com/Johnserf-Seed/TikTokDownload)
 
-# 赞赏
-## 支付宝
-![alipay](./img/alipay.jpg)
-## 微信
-![wechat](./img/wechat.jpg)
 
 # 申明
 
@@ -566,8 +561,29 @@ nohup python3 /root/workspace/tiktok/WebApi.py -p 5600 &
 
 ```
 
+### yt-dlp配置说明
+```
+参考：https://github.com/yt-dlp/yt-dlp/blob/9b16762f48914de9ac914601769c76668e433325/README.md#configuration-file-encoding
+- 下载地址配置
+- 登录账号配置
+- yt-dlp安装
+- 找不到 command 修复方案：https://zhuanlan.zhihu.com/p/115676400
+
+```
+
 ### playwright centos install guide
 ```
 https://github.com/kumaraditya303/playwright-centos/blob/master/Dockerfile
+
+```
+
+### instaloader sessionfile 获取
+```
+1、windows或者 macos 下载firefox 浏览器
+2、开启VPN
+3、下载获取session 的py文件： https://raw.githubusercontent.com/instaloader/instaloader/master/docs/codesnippets/615_import_firefox_session.py
+4、使用firefox 登录 instagram
+5、执行脚本：python3 615_import_firefox_session.py
+6、cpsession文件到服务器：scp local/session-santangworld   ~/.config/instaloader/session-santangworld
 
 ```

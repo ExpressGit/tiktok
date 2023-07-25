@@ -27,7 +27,7 @@ class DouYinVideoCrop(object):
         if date_str == None:
             date_str = datetime.date.today() + datetime.timedelta(-1)
             print(date_str)
-        douyu_video_list,_,_ = self.vd_read.findDateVideoFiles(date_str)
+        douyu_video_list,_,_,_ = self.vd_read.findDateVideoFiles(date_str)
 
         return douyu_video_list
     
@@ -51,6 +51,29 @@ class DouYinVideoCrop(object):
         # for video_file in tqdm(video_list):
         #     video_util.clear_video(video_file)
 
+    def add_video_en_subtitle(self,video_list):
+        '''
+        video add english subtitle
+        '''
+        if len(video_list) == 0:
+            print("视频列表为空，无需处理 add_video_en_subtitle~~~")
+            return
+        video_util = CommonVideoCrop()
+        video_audio_list = self.vd_read.getVideoAudioReg(config_name='douyin')
+        ret_video_list = []
+        for video_file in video_list:
+            add_flag =  True # 是否已经语音处理
+            for video_keyword,flag in tqdm(video_audio_list.items()):
+                if video_keyword in video_file and flag:
+                    video_new_file = video_util.add_video_en_subtitle(video_file=video_file)
+                    if len(video_new_file)>1:
+                        ret_video_list.append(video_new_file)
+                        add_flag = False
+                        continue
+            if add_flag:
+                ret_video_list.append(video_file)
+        print("~~~~~~~~~~video add english subtitle success~~~~~~~~")
+        return ret_video_list
 
 if __name__ == '__main__':
     if None == sys.argv[1]:
@@ -61,4 +84,9 @@ if __name__ == '__main__':
     douyin_crop = DouYinVideoCrop()
     # date_str = '2023-06-11'
     video_list = douyin_crop.get_all_video_list(date_str)
-    douyin_crop.deal_videos_list(video_list)
+    en_video_list = douyin_crop.add_video_en_subtitle(video_list)
+    douyin_crop.deal_videos_list(en_video_list)
+    
+    #清理冗余视频 en logo new edit 视频&srt文件
+    common = CommonVideoCrop()
+    common.clear_video('/root/video_download/douyin')

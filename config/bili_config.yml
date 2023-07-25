@@ -7,7 +7,6 @@ link:
   - https://space.bilibili.com/3494358099692362
   - https://space.bilibili.com/314480501
   - https://space.bilibili.com/1480975816
-  - https://space.bilibili.com/361469957
   - https://space.bilibili.com/3493299230870075
   - https://space.bilibili.com/186944422
   - https://space.bilibili.com/59905809
@@ -25,7 +24,6 @@ link:
   - https://space.bilibili.com/606332269
   - https://space.bilibili.com/227107602
   - https://space.bilibili.com/596842980
-  - https://space.bilibili.com/71573495
   - https://space.bilibili.com/279180568
   - https://space.bilibili.com/110371677
   - https://space.bilibili.com/392836434
@@ -38,7 +36,6 @@ link:
   - https://space.bilibili.com/1935882
   - https://space.bilibili.com/484433848
   - https://space.bilibili.com/701623084
-  - https://space.bilibili.com/267776898
 
 
 #指定视频logo位置 rightbottom，righttop，lefttop，leftbottom,empty
@@ -47,7 +44,6 @@ logops:
   - righttop
   - lefttop
   - righttop
-  - righttop
   - lefttop
   - righttop
   - righttop
@@ -66,7 +62,6 @@ logops:
   - righttop
   - righttop
   - righttop
-  - righttop
   - empty
   - righttop
   - empty
@@ -78,13 +73,45 @@ logops:
   - empty
   - lefttop
   - righttop
-  - leftbottom
+
+#是否需要语音识别 True False
+audios:
+  - False
+  - False
+  - False
+  - True
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
+  - False
 
 
-
-
-#指定每次下载后的休眠时间，避免B站风控
-sleep: 13
 # 下载保存位置, 默认当前文件位置
 # 必选
 path: /root/video_download/bili
@@ -101,7 +128,7 @@ output_format: mp4
 #Cookies 设置 设置 Cookies 后你才可以下载更高清晰度以及更多的剧集，当你传入你的大会员 SESSDATA 时（当然前提是你是大会员），你就可以下载大会员可访问的资源咯
 # cookie
 cookies: 
-  - 3d6504f9%2C1705201271%2C394f8%2A71Neglo5qCq6mYWqesCxPu-8qDz5nOvM2Xbqs4RyHFhgjVbk8PYImbkfiweIS9QJVmFWwHsQAAKQA
+  - 4ff20e6d%2C1705575910%2C881bd%2A71KCJTEvVpzcRX2OVq19FfdN3FubV-TDmb9uMiqolITDSWjl4WtP57rVfq8RvkcgNhvt8VWwAAKQA
   - 1267441a%2C1698605684%2Cf9220%2A52
 
 #是否下载弹幕 默认false

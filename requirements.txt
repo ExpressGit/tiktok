@@ -20,4 +20,4 @@ playwright-stealth==1.0.5
 pyee==9.0.4
 #python3 -m playwright install
 # 安装 chrome 依赖 https://blog.csdn.net/wgPython/article/details/102519342
-
+instaloader

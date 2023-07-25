@@ -23,7 +23,7 @@ import sys
 import json
 import yaml,tqdm
 import time
-
+import asyncio
 from apiproxy.douyin.douyin import Douyin
 from apiproxy.douyin.download import Download
 from apiproxy.douyin import douyin_headers
@@ -67,8 +67,9 @@ def argument():
     parser.add_argument("--link", "-l",
                         help="作品(视频或图集)、直播、合集、音乐集合、个人主页的分享链接或者电脑浏览器网址, 可以设置多个链接(删除文案, 保证只有URL, https://v.douyin.com/kcvMpuN/ 或者 https://www.douyin.com/开头的)",
                         type=str, required=False, default=[], action="append")
-    parser.add_argument("--config", "-cn", help="Yaml配置文件名称",
-                        type=str, required=False, default=os.getcwd())
+    parser.add_argument("--config", "-config",
+                        help="配置文件名称",
+                        type=str, required=False, default="douyin")
     parser.add_argument("--path", "-p", help="下载保存位置, 默认当前文件位置",
                         type=str, required=False, default=os.getcwd())
     parser.add_argument("--music", "-m", help="是否下载视频中的音乐(True/False), 默认为True",
@@ -294,6 +295,8 @@ def main():
         print("--------------------------------------------------------------------------------")
         print("[  提示  ]:正在请求的链接: " + link + "\r\n")
         url = dy.getShareLink(link)
+        print(url)
+        pre_fix = url[:-1].split('/')[-1]
         key_type, key = dy.getKey(url)
         if key_type == "user":
             print("[  提示  ]:正在请求用户主页下作品\r\n")
@@ -303,7 +306,7 @@ def main():
             if data is not None and data != {}:
                 nickname = utils.replaceStr(data['user_info']['nickname'])
 
-            userPath = os.path.join(configModel["path"], "user_" + nickname)
+            userPath = os.path.join(configModel["path"], nickname+"_"+pre_fix)
             if not os.path.exists(userPath):
                 os.mkdir(userPath)
 
@@ -317,7 +320,8 @@ def main():
                         modePath = os.path.join(userPath, mode)
                         if not os.path.exists(modePath):
                             os.mkdir(modePath)
-                        dl.userDownload(awemeList=datalist, savePath=modePath)
+                        asyncio.run(dl.userAsyncDownload(awemeList=datalist, savePath=modePath))
+                        # dl.userDownload(awemeList=datalist, savePath=modePath)
                 elif mode == 'mix':
                     mixIdNameDict = dy.getUserAllMixInfo(key, 35, configModel["number"]["allmix"])
                     if mixIdNameDict is not None and mixIdNameDict != {}:

@@ -20,10 +20,10 @@ import time
 
 def translate_text(content,lang):
     translator = GoogleTranslate()
-    print(content)
+    # print(content)
     res = translator.translate(content,lang)
     # res = translator.translate('안녕하세요.',dest='en')
-    print(res.result)
+    # print(res.result)
     return res.result
 
 if __name__ == '__main__':

@@ -42,8 +42,9 @@ function SendAjax() {
                     $("#avatar").attr("alt", result.author.nickname);
                     $("#nickname").html(result.author.nickname);
                     $("#desc").html(result.desc);
+                    $("#desc_en").html(result.desc_en);
 
-
+                    
                     var count = result.statistics.digg_count;
                     var digg_count;
                     if (count < 1000) {

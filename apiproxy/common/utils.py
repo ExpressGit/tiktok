@@ -29,6 +29,7 @@ import hashlib
 import moviepy
 import apiproxy
 import yaml,tqdm
+from datetime import datetime,timezone
 
 class Utils(object):
     def __init__(self):
@@ -241,6 +242,15 @@ class Utils(object):
         # 将struct_time对象转换为时间戳
         begin_timestamp = time.mktime(struct_time)
         return begin_timestamp
+    
+    def convert_utc_to_string(self,utc_datetime, output_format):
+        # 将 UTC 时间对象转换为本地时区时间对象
+        local_datetime = utc_datetime.replace(tzinfo=timezone.utc).astimezone()
+        
+        # 格式化本地时区时间为指定的输出格式
+        local_string = local_datetime.strftime(output_format)
+        
+        return local_string
     
 if __name__ == "__main__":
     pass

@@ -1,0 +1,32 @@
+# 作品(视频或图集)、直播、合集、音乐集合、个人主页的分享链接或者电脑浏览器网址
+# (删除文案, 保证只有URL, https://v.douyin.com/kcvMpuN/ 或者 https://www.douyin.com/开头的)
+# 可以设置多个链接, 确保至少一个链接
+# 必选
+link:
+  - https://www.instagram.com/rudymancuso/
+
+
+# 下载保存位置, 默认当前文件位置
+# 必选
+path: /root/video_download/instagram
+
+#最大并行 worker 数量
+img_num: 10
+
+#指定视频清晰度等级 可选值 0（最高4K） | 1（2K）
+video_quality: 1
+
+#指定输出格式 可选值 "infer" | "mp4" | "mkv" | "mov"
+output_format: mp4
+
+#Cookies 设置 设置 Cookies 后你才可以下载更高清晰度以及更多的剧集，当你传入你的大会员 SESSDATA 时（当然前提是你是大会员），你就可以下载大会员可访问的资源咯
+# cookie
+cookie_name: santangworld
+
+# 存放子路径模板
+subpath_template: \{username\}_\{owner_uid\}/\{pubdate\}/\{name\}
+
+#临时下载的视频保存位置
+temp_dir : /root/video_download/temp_video
+
+address_ip: 43.159.41.149

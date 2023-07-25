@@ -6,7 +6,10 @@ link:
   - https://www.youtube.com/@kym-yydk
   - https://www.youtube.com/@sunkemito
   
-
+#是否需要语音识别 True False
+audios:
+  - False
+  - True
 
 #指定视频logo位置 rightbottom，righttop，lefttop，leftbottom,empty
 logops:

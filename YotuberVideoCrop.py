@@ -29,9 +29,9 @@ class YoutubeVideoCrop(object):
         if date_str == None:
             date_str = datetime.date.today() + datetime.timedelta(-1)
             print(date_str)
-        _,_,Youtube_video_list = self.vd_read.findDateVideoFiles(date_str)
+        _,_,Youtube_video_list,_ = self.vd_read.findDateVideoFiles(date_str)
         # 读取字幕文件
-        _,_,Youtube_files_list = self.vd_read.findDateFiles(date_str)
+        _,_,Youtube_files_list,_ = self.vd_read.findDateFiles(date_str)
         # 读取logo postion文件
         link_logo_youtube_dict = self.vd_read.getVideoLogoPostion(config_name='youtube')
         # 将uid 和 video_path 结合，组装dict
@@ -107,6 +107,30 @@ class YoutubeVideoCrop(object):
         return new_video_list
         
 
+    def add_video_en_subtitle(self,video_list):
+        '''
+        video add english subtitle
+        '''
+        if len(video_list) == 0:
+            print("视频列表为空，无需处理 add_video_en_subtitle~~~")
+            return
+        video_util = CommonVideoCrop()
+        video_audio_list = self.vd_read.getVideoAudioReg(config_name='youtube')
+        ret_video_list = []
+        for video_file in video_list:
+            add_flag =  True # 是否已经语音处理
+            for video_keyword,flag in tqdm(video_audio_list.items()):
+                if video_keyword in video_file and flag:
+                    video_new_file = video_util.add_video_en_subtitle(video_file=video_file)
+                    if len(video_new_file)>1:
+                        ret_video_list.append(video_new_file)
+                        add_flag = False
+                        continue
+            if add_flag:
+                ret_video_list.append(video_file)
+        print("~~~~~~~~~~video add english subtitle success~~~~~~~~")
+        return ret_video_list
+    
 
 if __name__ == '__main__':
     if None == sys.argv[1]:
@@ -121,5 +145,10 @@ if __name__ == '__main__':
     video_list,srt_list,video_logo_dict = youtube_crop.get_all_video_list(date_str)
     new_video_list = youtube_crop.remove_Youtube_logo(video_list,video_logo_dict)
     print(new_video_list)
+    en_video_list = youtube_crop.add_video_en_subtitle(new_video_list)
     # new_en_video_list = youtube_crop.add_video_srt(new_video_list,srt_list)
-    youtube_crop.deal_videos_list(new_video_list)
+    youtube_crop.deal_videos_list(en_video_list)
+    
+    #清理冗余视频 en logo new edit 视频&srt文件
+    common = CommonVideoCrop()
+    common.clear_video('/root/video_download/youtube')

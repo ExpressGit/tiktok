@@ -16,6 +16,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from apiproxy.common.FFmpegUtil import FFmpeg
 from faster_whisper import WhisperModel
 from apiproxy.common.TranslateUtil import translate_text
+from tqdm import tqdm
 #来源：https://github.com/guillaumekln/faster-whisper
 
 
@@ -25,15 +26,11 @@ def audio_to_text_by_fastwhisper(audio_file):
     model_size = "small"
     # Run on GPU with FP16
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
-    # or run on GPU with INT8
-    # model = WhisperModel(model_size, device="cuda", compute_type="int8_float16")
-    # or run on CPU with INT8
-    # model = WhisperModel(model_size, device="cpu", compute_type="int8")
     segments_info = []
     segments, info = model.transcribe(audio_file, beam_size=5,vad_filter=True,vad_parameters=dict(min_silence_duration_ms=500))
     print("Detected language '%s' with probability %f" % (info.language, info.language_probability))
     for segment in segments:
-        print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
+        # print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
         #[((ta,tb),'some text'),...]
         item = [(segment.start,segment.end),segment.text]
         segments_info.append(item)
@@ -93,7 +90,7 @@ def ch_translate_to_en(segments):
     if len(segments)==0:
         print("字幕 文件 为空")
         return
-    for seg in segments:
+    for seg in tqdm(segments):
         times = seg[0]
         if len(seg[1])>0:
             seg_en = {'start':times[0],'end':times[1],'text':translate_text(seg[1],'en')}
@@ -103,15 +100,15 @@ def ch_translate_to_en(segments):
 def add_subtitle_in_video(video_path,srt_file,output_video_path):
     ffmpeg_util = FFmpeg(video_path) 
     ffmpeg_util.add_video_subtitle(srt_file,output_video_path)
-    print(" 视频 字幕 添加完成 done")
+    print(" {}视频 字幕 添加完成 done, 输出地址{}".format(video_path,output_video_path))
 
 if __name__ == '__main__':
-    video_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/这样的底道也不好跑啊，太费人了，比跑两天的高速还累!.mp4'
+    video_file = '/root/video_download/bili/【up】大山的农村人_1480975816/2023-07-07/万事俱备，只欠东风。今天带弟弟去把工具这些跟他备好.mp4'
     # audio_file = '/root/video_download/bili/大山的农村人_1480975816/2023-06-21/a.wav'
-    audio_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/这样的底道也不好跑啊，太费人了，比跑两天的高速还累!.wav'
+    audio_file = '/root/video_download/bili/【up】大山的农村人_1480975816/2023-07-07/万事俱备，只欠东风。今天带弟弟去把工具这些跟他备好.wav'
     # origin_srt_file = '/root/video_download/bili/我才是熊猫大G_267776898/2023-07-07/韩国人掏出烬中单，大G嘴都笑歪了，12分钟直接推门牙，对面人都傻了！_P01_中文（自动生成）.srt'
-    srt_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/这样的底道也不好跑啊，太费人了，比跑两天的高速还累!.srt'
-    video_output_file = '/root/video_download/bili/大山的农村人_1480975816/2023-07-01/a_subtitle.mp4'
+    srt_file = '/root/video_download/bili/【up】大山的农村人_1480975816/2023-07-07/万事俱备，只欠东风。今天带弟弟去把工具这些跟他备好.srt'
+    video_output_file = '/root/video_download/bili/【up】大山的农村人_1480975816/2023-07-07/a_subtitle.mp4'
     # get_audio_file(video_file,audio_file)
     # segments = audio_to_text(audio_file)
     # print(segments)
@@ -127,7 +124,7 @@ if __name__ == '__main__':
     # 利用whisper 生成 英文視頻
     get_audio_file(video_file,audio_file)
     segments = audio_to_text_by_fastwhisper(audio_file)
-    # segments_en = ch_translate_to_en(segments)
-    # create_srt_file(segments_en,srt_file)
-    # add_subtitle_in_video(video_file,srt_file,video_output_file)
+    segments_en = ch_translate_to_en(segments)
+    create_srt_file(segments_en,srt_file)
+    add_subtitle_in_video(video_file,srt_file,video_output_file)
     

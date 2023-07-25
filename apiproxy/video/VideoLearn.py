@@ -14,7 +14,7 @@ from tiktokapipy.models.video import Video
 import urllib.request
 from os import path
 import requests
-
+from TikTokApi import TikTokApi
 directory='/root/video_download/tiktok'
 
 
@@ -96,8 +96,8 @@ directory='/root/video_download/tiktok'
 
 #     return ret
 
-async def save_video(video: Video,api: AsyncTikTokAPI):
-     async with aiohttp.ClientSession(cookies={cookie["name"]: cookie["value"] for cookie in await api.context.cookies() if cookie["name"] == "tt_chain_token"}) as session:
+async def save_video(video: Video,api:AsyncTikTokAPI,cookies):
+     async with aiohttp.ClientSession(cookies=cookies) as session:
         # Creating this header tricks TikTok into thinking it made the request itself
         async with session.get(video.video.download_addr, headers={"referer": "https://www.tiktok.com/"}) as resp:
             return await resp.read()
@@ -108,11 +108,7 @@ async def get_tiktok_trend_video():
         user = await api.user("odapolf", video_limit=10)
         async for video in user.videos:
             print(video)
-            num_comments = video.stats.comment_count
-            num_likes = video.stats.digg_count
-            num_views = video.stats.play_count
-            num_shares = video.stats.share_count
-            video_bytes  = await save_video(video,api)
+            video_bytes  = await save_video(video,api,{cookie['name']: cookie['value'] for cookie in api.context.cookies()})
             print("video_bytes:" + video_bytes.decode())
             file_path = os.path.join(directory,'{}.mp4'.format(video.desc))
             print(file_path)
@@ -121,6 +117,16 @@ async def get_tiktok_trend_video():
         return "OK"
 
 
+
+def get_tiktok_video_video():
+    with TikTokApi() as api:
+        video = api.video(id="7041997751718137094")
+
+        # Bytes of the TikTok video
+        video_data = video.bytes()
+
+        with open("out.mp4", "wb") as out_file:
+            out_file.write(video_data)
 
 
 
@@ -250,7 +256,7 @@ def generate_mask_cover(video_path,video_title,postion,font_size):
     
 if __name__ == '__main__':
     video_path = '/root/video_download/douyin/user_小透明/post/2023-06-07/2023-06-07 19.12.41_考完了咱主打一个反差反差/2023-06-07 19.12.41_考完了咱主打一个反差反差_video.mp4'
-    video_raw_clip,duration,video_width,video_height,fps,audio_clip = get_video_basic_info(video_path)
+    # video_raw_clip,duration,video_width,video_height,fps,audio_clip = get_video_basic_info(video_path)
     # clip = video_add_random_transition(video_raw_clip)
     # clip = video_add_end_transition(video_raw_clip)
     text_content = "思想杰出艺术之花\n思想杰出艺术之花"
@@ -262,7 +268,7 @@ if __name__ == '__main__':
     # clip.write_videofile(new_video_path,fps=30)
 
     #tiktok
-    result =  asyncio.run(get_tiktok_trend_video())
+    result = get_tiktok_video_video()
     print(result)
    
     

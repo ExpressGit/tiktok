@@ -38,7 +38,7 @@ configModel = {
     "cookie": None,
     "cookie2": None,
     "danmaku": False,
-    "config_name":"bili",
+    "config":"bili",
     "subpath_template":"{username}\/{pubdate}\/{name}",
     "path": "/root/video_download/bili",
     "output-format":"mp4",
@@ -51,7 +51,7 @@ def argument():
     parser = argparse.ArgumentParser(description='B站批量下载工具 使用帮助')
     parser.add_argument("--cmd", "-C", help="使用命令行(True)或者配置文件(False), 默认为False",
                         type=utils.str2bool, required=False, default=False)
-    parser.add_argument("--config_name", "-config",
+    parser.add_argument("--config", "-config",
                         help="配置文件名称",
                         type=str, required=False, default="bili")
     parser.add_argument("--link", "-l",
@@ -163,7 +163,7 @@ def main():
         configModel["begin"] = args.begin
         configModel["end"] = args.end
     else:
-        yamlConfig(args.config_name)
+        yamlConfig(args.config)
 
     if configModel["link"] == []:
         return
@@ -185,23 +185,14 @@ def main():
         os.mkdir(configModel["path"])
 
     bili = BiliVideo()
+    
+    # configModel['begin']='2023-07-07'
+    
+    print("~~~下载视频日期{} 开始下载～～～～".format(configModel['begin']))
     # result = asyncio.run(bili.download_up_videos(configs['link'],cookie,date_str,save_path))
     result = asyncio.run(bili.download_up_videos(configModel['link'],configModel['cookies'],
-                                                 yestoday_str,configModel["path"],configModel['video_quality'],configModel['danmaku']))
-    # for i in tqdm.tqdm(range(0, num_len, 2)):
-    #     print("--------------------------------------------------------------------------------")
-    #     link1 = configModel["link"][i]
-    #     print("[  提示  ]:正在BILI请求的链接: " + link1 + "\r\n")
-    #     if i+1 <= (num_len - 1 ):
-    #         link2 = configModel["link"][i+1]
-    #         time.sleep(10)
-    #         result = build_bili_download_command(link2,configModel["path"], configModel["num_works"],configModel["video_quality"],
-    #                                 configModel["output_format"],configModel["subpath_template"],configModel["cookie2"],configModel["danmaku"],
-    #                                 configModel['begin'],configModel['end'])
-    #     if result :
-    #         print("link 链接download success ~~~",link1)
-    #     # 每次下载一个 暂定 12min
-    #     time.sleep(int(configModel["sleep"])*60)
+                                                 configModel['begin'],configModel["path"],configModel['video_quality'],configModel['danmaku']))
+    
     end = time.time()  # 结束时间
     print('\n' + '[下载完成]:总耗时: %d分钟%d秒\n' % (int((end - start) / 60), ((end - start) % 60)))  # 输出下载用时时间
 

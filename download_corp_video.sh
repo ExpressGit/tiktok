@@ -21,51 +21,51 @@ endday=`date '+%Y-%m-%d'`
 echo ${beginday}
 echo ${endday}
 
-#douyin
-echo "=====================================DouYinCommand donwload video begin====================================="
-python3 DouYinCommand.py -C False --config douyin 
-if [ $? -eq 0 ]; then
-    echo ${endday}" douyin download video success "
-else
-    echo ${endday}" douyin download video failed "
-    exit 1
-fi
-echo "=====================================DouYinCommand donwload video end====================================="
+# #douyin
+# echo "=====================================DouYinCommand donwload video begin====================================="
+# python3 DouYinCommand.py -C False --config douyin 
+# if [ $? -eq 0 ]; then
+#     echo ${endday}" douyin download video success "
+# else
+#     echo ${endday}" douyin download video failed "
+#     exit 1
+# fi
+# echo "=====================================DouYinCommand donwload video end====================================="
 
-# video 流水线处理
-echo "=====================================DouYinVideoCrop crop video begin====================================="
-python3 DouYinVideoCrop.py ${beginday}
-if [ $? -eq 0 ]; then
-    echo ${endday}" douyin corp video success "
-else
-    echo ${endday}" douyin corp video failed "
-    exit 1
-fi
-echo "=====================================DouYinVideoCrop crop video end====================================="
+# # video 流水线处理
+# echo "=====================================DouYinVideoCrop crop video begin====================================="
+# python3 DouYinVideoCrop.py ${beginday}
+# if [ $? -eq 0 ]; then
+#     echo ${endday}" douyin corp video success "
+# else
+#     echo ${endday}" douyin corp video failed "
+#     exit 1
+# fi
+# echo "=====================================DouYinVideoCrop crop video end====================================="
 
 
-#youtube
-echo "=====================================YoutubeCommand donwload video begin====================================="
-python3 YotuberCommand.py -C False --config youtube 
+# #youtube
+# echo "=====================================YoutubeCommand donwload video begin====================================="
+# python3 YotuberCommand.py -C False --config youtube 
 
-if [ $? -eq 0 ]; then
-    echo ${endday}" youtube download video success "
-else
-    echo ${endday}" youtube download video failed "
-    exit 1
-fi
-echo "=====================================YoutubeCommand donwload video end====================================="
+# if [ $? -eq 0 ]; then
+#     echo ${endday}" youtube download video success "
+# else
+#     echo ${endday}" youtube download video failed "
+#     exit 1
+# fi
+# echo "=====================================YoutubeCommand donwload video end====================================="
 
-# video 流水线处理
-echo "=====================================YotuberVideoCrop crop video begin====================================="
-python3 YotuberVideoCrop.py ${beginday}
-if [ $? -eq 0 ]; then
-    echo ${endday}" youtube corp video success "
-else
-    echo ${endday}" youtube corp video failed "
-    exit 1
-fi
-echo "=====================================YotuberVideoCrop crop video end====================================="
+# # video 流水线处理
+# echo "=====================================YotuberVideoCrop crop video begin====================================="
+# python3 YotuberVideoCrop.py ${beginday}
+# if [ $? -eq 0 ]; then
+#     echo ${endday}" youtube corp video success "
+# else
+#     echo ${endday}" youtube corp video failed "
+#     exit 1
+# fi
+# echo "=====================================YotuberVideoCrop crop video end====================================="
 
 
 #bili

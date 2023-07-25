@@ -156,6 +156,8 @@ def main():
     
     youtubevideo = YoutuberVideo()
     
+    # configModel["begin"]='20230717'
+    
     for i in tqdm.tqdm(range(0, num_len)):
         print("--------------------------------------------------------------------------------")
         link = configModel["link"][i]
@@ -164,7 +166,7 @@ def main():
         if result :
             print("link 链接download success ~~~",link)
         # 每次下载一个 暂定 10s
-        time.sleep(10)    
+        time.sleep(3)    
     end = time.time()  # 结束时间
     print('\n' + '[下载完成]:总耗时: %d分钟%d秒\n' % (int((end - start) / 60), ((end - start) % 60)))  # 输出下载用时时间
 

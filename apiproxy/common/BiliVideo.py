@@ -24,7 +24,8 @@ import asyncio
 from bilix.sites.bilibili import DownloaderBilibili
 from bilix.sites.bilibili import api
 from httpx import AsyncClient
-from bilix.sites.bilibili import DownloaderBilibili
+
+
 class BiliVideo(object):
     
     def __init__(self):
@@ -170,7 +171,7 @@ class BiliVideo(object):
             result['data']['author']['avatar']['url_list']=[video_info.up_info.face]
             result['data']['author']['nickname']=video_info.up_info.name
             result['data']['desc'] = video_info.title
-            #up主数据
+            
             result['data']['statistics']['digg_count'] = video_info.status.like
             result['data']['statistics']['collect_count'] = video_info.status.favorite
             result['data']['statistics']['share_count'] = video_info.status.share

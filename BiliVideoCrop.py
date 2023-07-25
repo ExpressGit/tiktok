@@ -10,6 +10,7 @@ Description:
 
 
 from apiproxy.common.VideoUtil import VideoUtil,VideoRead
+from apiproxy.common.SubtitleUtil import *
 from CommonVideoCrop import CommonVideoCrop
 import datetime,os,sys
 from tqdm import tqdm
@@ -29,9 +30,9 @@ class BiliVideoCrop(object):
         if date_str == None:
             date_str = datetime.date.today() + datetime.timedelta(-1)
             print(date_str)
-        _,Bili_video_list,_ = self.vd_read.findDateVideoFiles(date_str)
+        _,Bili_video_list,_,_ = self.vd_read.findDateVideoFiles(date_str)
         # 读取字幕文件
-        _,Bili_files_list,_ = self.vd_read.findDateFiles(date_str)
+        _,Bili_files_list,_,_ = self.vd_read.findDateFiles(date_str)
         # 读取logo postion文件
         link_logo_bili_dict = self.vd_read.getVideoLogoPostion(config_name='bili')
         # 将uid 和 video_path 结合，组装dict
@@ -94,7 +95,7 @@ class BiliVideoCrop(object):
         video_to_srt_list = []
         new_video_list = []
         for video_file in video_list:
-            base_name = os.path.basename(video_file)[:-9]
+            base_name = os.path.basename(video_file)[:-4]
             for srt in srt_list:
                 dir_name = os.path.dirname(srt)
                 srt_basename = os.path.basename(srt)[:-4]
@@ -106,8 +107,31 @@ class BiliVideoCrop(object):
             new_video_list.append(new_video_path)
         return new_video_list
         
-
-
+        
+    def add_video_en_subtitle(self,video_list):
+        '''
+        video add english subtitle
+        '''
+        if len(video_list) == 0:
+            print("视频列表为空，无需处理 add_video_en_subtitle~~~")
+            return
+        video_util = CommonVideoCrop()
+        video_audio_list = self.vd_read.getVideoAudioReg(config_name='bili')
+        ret_video_list = []
+        for video_file in video_list:
+            add_flag =  True # 是否已经语音处理
+            for video_keyword,flag in tqdm(video_audio_list.items()):
+                if video_keyword in video_file and flag:
+                    video_new_file = video_util.add_video_en_subtitle(video_file=video_file)
+                    if len(video_new_file)>1:
+                        ret_video_list.append(video_new_file)
+                        add_flag = False
+                        continue
+            if add_flag:
+                ret_video_list.append(video_file)
+        print("~~~~~~~~~~video add english subtitle success~~~~~~~~")
+        return ret_video_list
+    
 if __name__ == '__main__':
     if None == sys.argv[1]:
         date_str =  datetime.date.today() + datetime.timedelta(-1)
@@ -115,11 +139,16 @@ if __name__ == '__main__':
         date_str = sys.argv[1]
     print(" 本次 bili 视频 处理 日期:%s" % date_str)
     
-    # date_str = '2023-07-19'
+    # date_str = '2023-07-07'
     
     bili_crop = BiliVideoCrop()
     video_list,srt_list,video_logo_dict = bili_crop.get_all_video_list(date_str)
     new_video_list = bili_crop.remove_bili_logo(video_list,video_logo_dict)
     print(new_video_list)
-    new_en_video_list = bili_crop.add_video_srt(new_video_list,srt_list)
-    bili_crop.deal_videos_list(new_en_video_list)
+    en_video_list = bili_crop.add_video_en_subtitle(new_video_list)
+    # new_en_video_list = bili_crop.add_video_srt(new_video_list,srt_list)
+    bili_crop.deal_videos_list(en_video_list)
+    
+    #清理冗余视频 en logo new edit 视频&srt文件
+    common = CommonVideoCrop()
+    common.clear_video('/root/video_download/bili')

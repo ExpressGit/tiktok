@@ -33,6 +33,7 @@ class VideoRead(object):
         bili_file_list = []
         douyin_file_list = []
         youtube_file_list = []
+        tiktok_file_list = []
         for file_path in self.findAllFiles():
             if date_str in file_path:
                 if 'douyin' in file_path:
@@ -41,7 +42,9 @@ class VideoRead(object):
                     bili_file_list.append(file_path)
                 if 'youtube' in file_path:
                     youtube_file_list.append(file_path)
-        return douyin_file_list,bili_file_list,youtube_file_list
+                if 'tiktok' in file_path:
+                    tiktok_file_list.append(file_path)
+        return douyin_file_list,bili_file_list,youtube_file_list,tiktok_file_list
     
     def findDateVideoFiles(self,date_str):
         # 三个文件夹 douyin\bili\youtube
@@ -49,7 +52,8 @@ class VideoRead(object):
         bili_video_list = []
         douyin_video_list = []
         youtube_video_list = []
-        douyin_file_list,bili_file_list,youtube_file_list = self.findDateFiles(date_str)
+        tiktok_video_list = []
+        douyin_file_list,bili_file_list,youtube_file_list,tiktok_file_list = self.findDateFiles(date_str)
         for file in douyin_file_list:
             if file.endswith('.mp4'):
                 douyin_video_list.append(file)
@@ -61,7 +65,11 @@ class VideoRead(object):
         for file in youtube_file_list:
             if file.endswith('.mp4'):
                 youtube_video_list.append(file)
-        return douyin_video_list,bili_video_list,youtube_video_list
+                
+        for file in tiktok_file_list:
+            if file.endswith('.mp4'):
+                tiktok_video_list.append(file)
+        return douyin_video_list,bili_video_list,youtube_video_list,tiktok_video_list
 
     def getVideoLogoPostion(self,config_name='bili'):
         """
@@ -72,8 +80,23 @@ class VideoRead(object):
         configModelDict = util.get_video_config_dict(yamlPath)
         links = configModelDict['link']
         logpos = configModelDict['logops']
-        link_logpos_dict = {links[i].replace("https://space.bilibili.com/","").replace("https://www.youtube.com/",''): logpos[i] for i in range(len(links))}
+        link_logpos_dict = {links[i].replace("https://space.bilibili.com/","").replace("https://www.youtube.com/",'').replace("https://v.douyin.com/",'').replace("/",''): 
+                                logpos[i] for i in range(len(links))}
         return link_logpos_dict
+    
+    
+    def getVideoAudioReg(self,config_name='bili'):
+        """
+        获取 up 主 视频是否需要添加字幕
+        """
+        yamlPath = os.path.join(self.config_dir,'config',config_name+"_config.yml")
+        util = Utils()
+        configModelDict = util.get_video_config_dict(yamlPath)
+        links = configModelDict['link']
+        audios = configModelDict['audios']
+        link_audios_dict = {links[i].replace("https://space.bilibili.com/","").replace("https://www.youtube.com/",'').replace("https://v.douyin.com/",'').replace("/",''): 
+                                audios[i] for i in range(len(links))}
+        return link_audios_dict
 
 
 class VideoUtil(object):
